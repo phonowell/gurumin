@@ -1,0 +1,25 @@
+{
+  "name": "gurumin",
+  "version": "0.0.1",
+  "description": "gurumin library",
+  "main": "./index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/phonowell/gurumin.git"
+  },
+  "keywords": [
+    "gurumin"
+  ],
+  "author": "Mimiko Phonowell <phnonwell@gmail.com>",
+  "license": "GPL-3.0+",
+  "url": "https://github.com/phonowell/gurumin",
+  "bugs": {
+    "url": "https://github.com/phonowell/gurumin/issues"
+  },
+  "homepage": "https://github.com/phonowell/gurumin",
+  "devDependencies": {
+    "fire-keeper": "^0.0.34"
+  },
+  "dependencies": {}
+}

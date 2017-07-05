@@ -1,0 +1,104 @@
+#stage
+  width auto
+  height auto
+  overflow hidden
+  background-color #fff
+  margin auto
+  padding 0
+  font-size 14px
+  font-family 'lucida grande', 'lucida sans unicode', lucida, helvetica, 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif
+
+  &.theme-night
+    background-color $color-night
+
+  status()
+    $p = arguments[0]
+    $a = arguments[1]
+    $b = arguments[2]
+    &.{$p + '-' + $a}
+      .only-{$a}
+        display block
+      .not-{$a}
+        display none
+    if $b
+      &.{$p + '-' + $b}
+        .only-{$b}
+          display block
+        .not-{$b}
+          display none
+      .only-{$a}, .only-{$b}
+        display none
+      .not-{$a}, .not-{$b}
+        display auto
+    else
+      .only-{$a}
+        display none
+      .not-{$a}
+        display auto
+
+  status('os', 'android', 'ios')
+  status('shell', 'browser')
+  status('shell', 'application')
+  status('shell', 'wechat')
+  status('shell', 'electron')
+  status('user', 'login')
+  status('device', 'desktop')
+  status('mode', 'debug')
+
+// color
+.color-main
+  background-color $color-main
+
+.color-night
+  background-color $color-night
+
+// class
+
+.hidden
+  display none !important
+  pointer-events none !important
+
+.latent
+  visibility hidden
+  pointer-events none
+
+.no-select
+  user-select none
+  cursor default
+
+.clear
+  &:after
+    content ''
+    display block
+    clear both
+
+._swiping
+  a, img
+    pointer-events none
+
+.isSwiping
+  pointer-events none
+
+.animate-remove
+  animation-name animate-remove-app
+  animation-duration 500ms
+
+// animation
+@keyframes animate-remove-app
+  0%
+    opacity 1
+    transform scale(1) translateX(0)
+  33.33%, 66.67%
+    opacity 1
+    transform scale(0.9) translateX(0)
+  100%
+    opacity 0
+    transform scale(0.9) translateX(-32px)
+
+@keyframes animate-fade-in-btn
+  0%
+    opacity 0.15
+    transform scale3d(0.75, 0.75, 1)
+  100%
+    opacity 0
+    transform scale3d(1, 1, 1)

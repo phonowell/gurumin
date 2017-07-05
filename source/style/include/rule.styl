@@ -1,0 +1,14 @@
+@require 'color'
+
+//nib
+@require 'nib/index'
+vendors = webkit moz official
+
+//vendor
+_vendor(prop, args)
+  -webkit-{prop} args
+  -moz-{prop} args
+  {prop} args
+
+filter()
+  _vendor 'filter', arguments

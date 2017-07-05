@@ -1,0 +1,45 @@
+.switch
+  $width-a = 48px
+  $width-b = 24px
+  $width-c = 2px
+
+  width $width-a
+  height 28px
+  cursor pointer
+  background-color #ddd
+  border-radius @height * 0.5
+  position relative
+  box-shadow 0 1px 2px rgba(#000, 0.2) inset
+  transition background-color 0.5s ease
+
+  .theme-night &
+    background-color #555
+
+    &.active
+      background-color #333
+      &:after
+        color #333
+
+  &:after
+    content '\e209'
+    font-family 'icon'
+    position absolute
+    width $width-b
+    height @width
+    line-height @height
+    text-align center
+    color #ddd
+    background-color #fff
+    border-radius @height * 0.5
+    box-shadow 0 1px 2px rgba(#000, 0.25)
+    left 0
+    top 0
+    transform translate3d($width-c, $width-c, 0)
+    transition all 0.5s ease
+
+  &.active
+    background-color $color-main
+    &:after
+      content '\e206'
+      color $color-main
+      transform translate3d($width-a - $width-b - $width-c, $width-c, 0)

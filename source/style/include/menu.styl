@@ -1,0 +1,38 @@
+.menu
+  display block
+  position absolute
+  width 80%
+  height 100%
+  top 0
+  left 0
+  background-color #fafafa
+  z-index 3
+  box-shadow 0 0 4px rgba(#000, 0.25)
+  transform translate3d(-100%, 0, 0)
+
+  .theme-night &
+    background-color #555
+
+    .item
+      border-color #444
+      color #fff
+
+  .item
+    display block
+    border-bottom 1px solid #ddd
+    padding 16px
+    font-size 16px
+    color #555
+
+    &:after
+      content ''
+      display block
+      clear both
+
+  .icon
+    margin-right 0.5em
+
+  .r
+    float right
+    margin-right 0
+    font-size 1.2em

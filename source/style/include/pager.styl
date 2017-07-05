@@ -1,0 +1,69 @@
+.area-pager
+  overflow hidden
+  margin 0 auto
+  width 100%
+  height auto
+  text-align center
+  font-size 0
+
+  .inner
+    margin 0 auto
+    display inline-block
+    &:after
+      content ''
+      display block
+      clear both
+
+  .hint
+    display inline-block
+    float left
+    margin 0 0 0 8px
+    height 32px
+    color #999
+    text-align left
+    font-size 14px
+    line-height 32px
+
+  li
+    display inline-block
+
+  .ipt-pager
+    display inline-block
+    margin 0 4px
+    min-width 0
+    width 32px
+    text-align right
+
+  .btn-pager
+    float none
+    margin 0 0 0 4px !important
+    min-width 32px
+
+.pager
+  display inline-block
+  float left
+  margin 0 2px 0 0
+  padding 0 4px
+  min-width 48px
+  width auto
+  height 32px
+  border 0
+  background-color $color-main
+  color #fff
+  text-align center
+  font-weight bold
+  font-size 12px
+  line-height 32px
+  cursor pointer
+
+  &:visited
+    color #fff
+
+  &:active
+    background-color @background-color - 10%
+    color #fff
+
+  &.active
+    background-color #eee
+    color #333
+    cursor default

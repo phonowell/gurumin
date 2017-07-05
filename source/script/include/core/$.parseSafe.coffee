@@ -1,0 +1,1 @@
+$.parseSafe = _.escape

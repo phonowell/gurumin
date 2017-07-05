@@ -1,0 +1,56 @@
+#waiter
+  display block
+  position absolute
+  z-index 7
+  size 64px
+  left 50%
+  top 50%
+  margin-left -@width * 0.5
+  margin-top -@width * 0.5
+  color #fff
+  text-align center
+  line-height @height
+  pointer-events none
+
+  &.hidden
+    &:before
+      animation none
+    .icon
+      animation none
+
+  &:before
+    content ''
+    display block
+    position absolute
+    size 100%
+    left 0
+    top 0
+    background-color $color-main
+    animation animation-waiter-outer 1s ease infinite
+    animation-fill-mode both
+    border-radius 4px
+
+  .icon
+    position relative
+    z-index 1
+    font-size 32px
+    vertical-align middle
+    animation animation-waiter-inner 2s ease infinite
+    animation-fill-mode both
+
+@keyframes animation-waiter-outer
+  0%
+    opacity 1
+    transform rotate(45deg) scale(0.8)
+  50%
+    opacity 0.8
+    transform rotate(135deg) scale(1)
+  100%
+    opacity 1
+    transform rotate(225deg) scale(0.8)
+
+@keyframes animation-waiter-inner
+  0%, 80%
+    transform rotate(0)
+  100%
+    transform rotate(180deg)

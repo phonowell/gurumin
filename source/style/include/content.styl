@@ -1,0 +1,209 @@
+.content-content
+  width auto
+  height auto
+  padding 16px
+  font-size 16px
+  line-height 1.8
+  background-color #fff
+  color #555
+  word-break break-word
+
+  .shell-wechat.theme-night &
+    hr
+      background none
+      background-color #444
+
+  .theme-night &
+    background-color #666
+    color #ccc
+
+    a
+      color #369 + 50%
+
+    blockquote, ul, ol
+      background-color #777
+      border-color #555
+
+    hr
+      background linear-gradient(left, $color-none, #444, $color-none)
+
+    h1, h2, h3, h4, h5, h6
+      color #eee
+
+    table
+      background-color #666
+      border-color #444
+
+    thead
+      background-color #444
+      color #eee
+
+    tbody
+      color #ccc
+
+    tr
+      &:nth-of-type(2n)
+        background-color #555
+
+    .btn
+      color #999
+
+  a
+    color #369
+    word-break break-all
+
+  p
+    margin 0 0 1.25em
+
+  strong
+    font-weight bold
+
+  em
+    font-style italic
+
+  pre
+    white-space normal
+
+  img
+    display inline-block
+    width 100%
+    max-width initial
+    max-height initial
+    margin 0 -16px
+    line-height 0
+
+  .container-img
+    position relative
+    display block
+    margin 0 -16px 1.25em
+    line-height 0
+
+    &:active
+      .icon-play-circle-outline:after, .hint-img
+          background-color rgba(#000, 0.6)
+
+    img
+      margin 0 auto
+    .icon-play-circle-outline
+      display block
+      position absolute
+      width 64px
+      height @width
+      line-height @width
+      font-size @width
+      text-align center
+      left 50%
+      top 50%
+      margin 0
+      margin-top -@width * 0.5
+      margin-left -@width * 0.5
+      color #fff
+      &:before
+        z-index 1
+        position relative
+      &:after
+        content ''
+        display block
+        position absolute
+        background-color rgba(#000, 0.5)
+        width 100%
+        height 100%
+        left 0
+        top 0
+        border-radius 50%
+  .hint-img
+    display inline-block
+    position absolute
+    width auto
+    height 20px
+    line-height @height
+    right 4px
+    top 4px
+    padding 0 8px
+    border-radius 2px
+    font-size 12px
+    background-color rgba(#000, 0.5)
+    color #fff
+    i
+      margin-right 0.2em
+
+  video
+    display block
+    width 100%
+    margin 0 -16px 1.25em
+    height auto !important
+    line-height 0
+
+  table
+    margin 0 -16px 1.25em
+    border-bottom 2px solid #ddd
+    width 100%
+    background-color #fff
+    text-align center
+    line-height 2
+
+  thead
+    background-color #ddd
+    color #666
+    font-size 16px
+    font-weight bold
+
+  tbody
+    font-size 14px
+    color #777
+
+  tr
+    &:nth-of-type(2n)
+      background-color #fafafa
+
+  td, th
+    padding 1em
+    line-height 1.2
+
+  blockquote, ul, ol
+    background #fafafa
+    border-left 2px solid #ddd
+    margin 0 auto 1.25em
+    padding 1em
+
+    p
+      display inline
+
+  ol li
+    list-style decimal inside
+
+  ul li
+    list-style inside
+
+  hr
+    border 0
+    height 1px
+    background linear-gradient(left, $color-none, #ccc, $color-none)
+    margin 1.25em auto
+
+  h1, h2, h3, h4, h5, h6
+    font-weight bold
+    margin 0 0 1.25em
+
+  h1, h2, h3, h4, h5
+    color #555
+
+  h1
+    font-size 2em
+  h2
+    font-size 1.75em
+  h3
+    font-size 1.5em
+  h4
+    font-size 1.25em
+  h5
+    font-size 1em
+  h6
+    font-size 1em
+    color #777
+
+  .alert
+    margin 0 1em 1.25em
+
+  .btn
+    color #fff

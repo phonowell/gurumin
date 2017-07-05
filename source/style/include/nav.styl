@@ -1,0 +1,192 @@
+.nav
+  background-color #fcfcfc
+  width 100%
+  height 48px
+  line-height @height
+  color #fff
+  z-index 1
+  position fixed
+  bottom 0
+  border-top 1px solid #ececec
+  text-align center
+  font-size 0
+  box-sizing border-box
+
+  .theme-night &
+    background-color #222
+    border-color #111
+
+    .item
+      color #999
+
+      &:before
+        color #ccc
+      &:after
+        background-color #fff
+
+      &.active
+        color #eee
+
+    .icon.layer-sub
+      color #666
+
+  &.animate-in
+    animation fadeIn 250ms ease
+  &.animate-out
+    animation fadeOut 350ms ease
+
+  .item
+    display inline-block
+    position relative
+    width 25%
+    height 47px
+    padding 0
+    margin 0
+    text-align center
+    color #777
+    cursor pointer
+
+    &:first-of-type, &:last-of-type
+      margin-left 0
+      margin-right 0
+
+    &:before
+      content 'TOP'
+      display block
+      position absolute
+      width 200%
+      height 128px
+      left -50%
+      top -48px
+      font-size 20px
+      transition opacity 350ms ease
+      transform scale(0.5)
+      opacity 0
+      color #555
+      line-height @height
+      text-align center
+
+    &:after
+      content ''
+      position absolute
+      top 50%
+      left 50%
+      margin -24px 0 0 -24px
+      size 48px
+      border-radius 50%
+      pointer-events none
+      opacity 0
+      background-color #999
+
+    &.active
+      color #333
+
+      .icon
+        &.not-active
+          display none
+        &.only-active
+          display block
+
+    &._active:after
+      animation animate-fade-in-btn 350ms ease-out forwards
+
+    &._top
+      &:before
+        opacity 1
+      .icon
+        transform translateY(16px)
+
+  .icon
+    display block
+    height 47px
+    line-height @height
+    text-align center
+    font-size 28px
+    margin 0
+    padding 0
+    transition transform 350ms ease
+
+    &.layer-sub
+      color #ddd
+
+    &.only-active
+      display none
+
+#nav
+
+  .icon
+    position absolute
+    width 100%
+
+.nav-space
+  height 48px
+  width 100%
+
+.nav-transparent
+  background none
+  border 0
+  height auto
+  overflow visible
+
+  .os-ios &
+    .right
+      .pts
+        font-weight normal
+    .only-ios
+      display block
+
+  .icon
+    display block
+    background-color #222
+    size 40px
+    line-height @width
+    text-align center
+    border-radius @width * 0.5
+    font-size @width * 0.5
+
+    &:first-of-type, &:last-of-type
+      display block
+
+  .only-ios
+    display none
+
+  .left, .right
+    position absolute
+    bottom 0
+
+    a
+      display block
+      float left
+      padding 24px 8px 8px
+      position relative
+      color #fff
+      cursor pointer
+
+      &:active, &._active
+        .icon
+          background-color #222 + 20%
+
+      &.active
+        .icon
+          color $color-main
+
+    .pts
+      display block
+      color #fff
+      background-color $color-main
+      height 16px
+      line-height @height
+      padding 0 @height * 0.5
+      border-radius @height * 0.5
+      font-size 12px
+      position absolute
+      right 0
+      top 24px
+      transform scale(0.8)
+      font-weight 100
+      pointer-events none
+
+  .left
+    left 0
+  .right
+    right 0

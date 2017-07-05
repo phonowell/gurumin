@@ -1,0 +1,6 @@
+source
+.stylintrc
+*.md
+*.yml
+*.coffee
+*.map

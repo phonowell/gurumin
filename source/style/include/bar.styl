@@ -1,0 +1,196 @@
+.bar
+  background-color #222
+  width 100%
+  height 48px
+  line-height @height
+  color #fff
+  z-index 5
+  transform translateZ(0)
+  position absolute
+  -webkit-app-region drag
+  transition transform 350ms ease
+
+  .theme-night &
+    .btn
+      background none
+
+  .bar-transparent &
+    padding-top 20px
+
+    &.status-hidden
+      .inner
+        opacity 0
+        pointer-events none
+
+    .inner
+      transition opacity 250ms ease
+
+  &.status-hidden
+    transform translateY(-48px)
+
+    .btn
+      pointer-events none
+
+  .inner
+    size 100%
+    text-align center
+    font-size 0
+
+  a
+    color #fff
+    -webkit-app-region no-drag
+
+  .title
+    display inline-block
+    width auto
+    height 48px
+    max-width 60%
+    line-height @height
+    margin 0 auto
+    text-align center
+    vertical-align middle
+    font-size 16px
+    cursor default
+    text-overflow ellipsis
+    overflow hidden
+    white-space nowrap
+
+    sup
+      font-size 12px
+      margin-left 0.2em
+
+    .icon
+      display inline-block
+
+  .left, .right
+    line-height inherit
+    position absolute
+    width auto
+    height 48px
+    left 0
+    bottom 0
+    font-size 0
+
+  .left
+    .btn
+      &:last-of-type
+        &:after
+          width 64px
+
+  .right
+    left auto
+    right 0
+    .btn
+      &:after
+        left auto
+        right 0
+
+      &:first-of-type
+        &:after
+          width 64px
+
+  .btn
+    size 48px
+    padding 0
+    margin 0
+    border 0
+    background none
+    border-radius 0
+    line-height @height
+    text-align center
+    position relative
+
+    &:after
+      content ''
+      display block
+      position absolute
+      left 0
+      top 0
+      width 100%
+      height 64px
+
+    &:active
+      background none
+
+    .icon
+      font-size 20px
+      margin 0
+      text-align center
+      vertical-align middle
+
+    span
+      font-size 12px
+
+    .icon, span
+      position relative
+      &:after
+        content ''
+        position absolute
+        top 50%
+        left 50%
+        margin -24px 0 0 -24px
+        size 48px
+        border-radius 50%
+        pointer-events none
+        opacity 0
+        background-color #fff
+
+    &._active
+      .icon, span
+        &:after
+          animation animate-fade-in-btn 350ms ease-out forwards
+
+    &.active
+      color gold
+
+  // tabb
+  .tabb
+    position relative
+    width auto
+    height 48px
+    margin 0 auto
+    text-align center
+    font-size 0
+
+    a
+      display inline-block
+      position relative
+      font-size 16px
+      color #ccc
+      width 96px
+      height 48px
+      margin 0
+      padding 0
+      cursor pointer
+
+      &:after
+        content ''
+        position absolute
+        display block
+        width 100%
+        height 64px
+        left 0
+        top 0
+
+      &:active
+        background linear-gradient(bottom, rgba(#fff, 0.1), $color-none) no-repeat
+
+      &.active
+        color #fff
+
+        &:before
+          content ''
+          position absolute
+          display block
+          width 64px
+          height 4px
+          background-color $color-main
+          left 16px
+          bottom 0
+
+.bar-space
+  height 48px
+  width 100%
+
+  .bar-transparent &
+    height 68px
