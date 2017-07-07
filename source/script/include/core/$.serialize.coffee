@@ -1,4 +1,4 @@
-$.serialize or= (string) ->
+$.serialize = (string) ->
   switch $.type string
     when 'object' then string
     when 'string'

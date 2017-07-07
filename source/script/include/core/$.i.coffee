@@ -1,8 +1,8 @@
-$.i = (args...) ->
-  [method, type, msg] = switch args.length
-    when 1 then ['log', 'default', args[0]]
-    when 2 then ['log', args[0], args[1]]
-    else args
+$.i = (arg...) ->
+  [method, type, msg] = switch arg.length
+    when 1 then ['log', 'default', arg[0]]
+    when 2 then ['log', arg[0], arg[1]]
+    else arg
 
   if type in $.i.forbidden then return msg
 

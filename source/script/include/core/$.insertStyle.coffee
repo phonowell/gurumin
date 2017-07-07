@@ -7,9 +7,12 @@ $.insertStyle = (id, style) ->
 
   if $el.length
     $el.html style
-    return
+    return style
 
   $ '<style>'
   .attr {id}
   .html style
   .appendTo $target
+
+  # return
+  style

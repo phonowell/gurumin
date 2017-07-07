@@ -1,7 +1,7 @@
-$.next = (args...) ->
+$.next = (arg...) ->
 
-  [delay, callback] = switch args.length
-    when 1 then [0, args[0]]
-    else args
+  [delay, callback] = switch arg.length
+    when 1 then [0, arg[0]]
+    else arg
 
   setTimeout callback, delay

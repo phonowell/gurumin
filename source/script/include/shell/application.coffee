@@ -1,12 +1,13 @@
-window.cordova or= {}
-window.plugins or= {}
-window.anitama or= {}
+# prepare
 
-app.check or= {}
-app.keyboard or= {}
-app.share or= {}
+for key in 'anitama cordova plugins'.split ' '
+  window[key] or= {}
+for key in 'check keyboard share'.split ' '
+  app[key] or= {}
 
-app.open = (url, target = '_blank') ->
+# function
+
+app.open = (url) ->
 
   if app.os != 'ios'
     app.open.InAppBrowser url
