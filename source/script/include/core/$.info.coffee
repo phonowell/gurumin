@@ -1,6 +1,7 @@
 do ->
 
   $layer = $ '#layer-info'
+  if !$layer.length then throw new Error 'invalid element'
 
   # function
 

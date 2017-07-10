@@ -1,10 +1,17 @@
 $.fn.onAnimationEnd = (fn) ->
 
   EVENT = if window.WebKitTransitionEvent
-    'webkitTransitionEnd webkitAnimationEnd'
+    'webkitTransitionEnd
+    webkitAnimationEnd'
   else
-    'mozTransitionEnd MSTransitionEnd otransitionend transitionend
-    mozAnimationEnd MSAnimationEnd oanimationend animationend'
+    'mozTransitionEnd
+    MSTransitionEnd
+    otransitionend
+    transitionend
+    mozAnimationEnd
+    MSAnimationEnd
+    oanimationend
+    animationend'
 
   @each ->
 

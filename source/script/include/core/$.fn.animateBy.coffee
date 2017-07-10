@@ -7,9 +7,10 @@ $.fn.animateBy = (list, callback) ->
   @each -> $.animateBy $(@), list, 0, callback
 
 $.animateBy = ($el, list, i, callback) ->
+
   if i >= list.length
     callback?()
-    return
+    return $el
 
   $el.onAnimationEnd ->
     $el.removeClass list[i]
