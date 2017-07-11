@@ -2,15 +2,15 @@ do ->
 
   ls = window.localStorage
 
-  fn = $.cache = (args...) ->
+  fn = $.cache = (arg...) ->
     # switch
-    switch args.length
+    switch arg.length
       when 0 then ls # $.cache()
       when 1
-        switch $.type args[0]
-          when 'string' then fn.get args... # $.cache(key)
-          else fn.set args... # $.cache({args...})
-      when 2 then fn.set args... # $.cache(key, value)
+        switch $.type arg[0]
+          when 'string' then fn.get arg... # $.cache(key)
+          else fn.set arg... # $.cache({arg...})
+      when 2 then fn.set arg... # $.cache(key, value)
       else ls # unknown
 
   fn.namespace = 'cache'
@@ -18,16 +18,16 @@ do ->
 
   fn.get = (key) -> $.parseJson ls.getItem fn.prefix key
 
-  fn.set = (args...) ->
+  fn.set = (arg...) ->
     fn.check()
-    switch args.length
+    switch arg.length
       when 1
-        for key, value of args[0]
+        for key, value of arg[0]
           key = fn.prefix key
           if !value? then return ls.removeItem key
           ls.setItem key, $.parseString value
       when 2
-        [key, value] = args
+        [key, value] = arg
         key = fn.prefix key
         if !value? then return ls.removeItem key
         ls.setItem key, $.parseString value
@@ -60,27 +60,27 @@ $.Cache = (name, defaultProp) ->
   ($.Cache.list or= []).push name
 
   # $.fn
-  fn = (args...) ->
+  fn = (arg...) ->
     # switch
-    switch args.length
+    switch arg.length
       when 0 then fn.data # $.fn()
       when 1
-        switch $.type args[0]
-          when 'string' then fn.get args... # $.fn(key)
-          else fn.set args... # $.fn({args...})
-      when 2 then fn.set args... # $.fn(key, value)
+        switch $.type arg[0]
+          when 'string' then fn.get arg... # $.fn(key)
+          else fn.set arg... # $.fn({arg...})
+      when 2 then fn.set arg... # $.fn(key, value)
       else fn.data # unknown
 
   fn.get = (key) -> fn.data[key]
 
-  fn.set = (args...) ->
-    switch args.length
+  fn.set = (arg...) ->
+    switch arg.length
       when 1
-        for key, value of args[0]
+        for key, value of arg[0]
           if !value? then fn.remove key
           else fn.data[key] = value
       when 2
-        [key, value] = args
+        [key, value] = arg
         if !value? then fn.remove key
         else fn.data[key] = value
     fn.save()
