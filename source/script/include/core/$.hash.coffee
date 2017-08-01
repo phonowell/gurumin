@@ -1,9 +1,17 @@
 do ->
 
-  fn = $.hash = (key) ->
+  # function
+
+  fn = (key) ->
     data = $.hash.parse()
     if !key then return data
     data[key]
+
+  ###
+
+    parse(url)
+
+  ###
 
   fn.parse = (
     url = (
@@ -16,3 +24,6 @@ do ->
       b = a.split '='
       res[b[0]] = decodeURIComponent b[1]
     res
+
+  # return
+  $.hash = fn

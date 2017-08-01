@@ -1,34 +1,57 @@
 do ->
+
   ss = window.sessionStorage
 
-  fn = $.session = (args...) ->
-    switch args.length
+  # function
+
+  fn = (arg...) ->
+    switch arg.length
       when 0 then ss # $.session()
       when 1
-        switch $.type args[0]
-          when 'string' then fn.get args... # $.session(key)
-          else fn.set args... # $.session({key: value})
-      when 2 then fn.set args... # $.session(key, value)
+        switch $.type arg[0]
+          when 'string' then fn.get arg... # $.session(key)
+          else fn.set arg... # $.session({key: value})
+      when 2 then fn.set arg... # $.session(key, value)
       else ss # unknown
 
-  fn.prefix = (key) -> "cache::#{key}"
+  ###
 
-  fn.get = (key) -> $.parseJson ss.getItem fn.prefix key
+    clear()
+    get(key)
+    prefix(key)
+    remove(key)
+    set(key)
+    size()
 
-  fn.set = (args...) ->
-    switch args.length
-      when 1
-        for key, value of args[0]
-          if !value? then fn.remove key
-          else ss.setItem fn.prefix(key), $.parseString value
-      when 2
-        [key, value] = args
-        if !value? then fn.remove key
-        else ss.setItem fn.prefix(key), $.parseString value
-    ss
-
-  fn.remove = (key) -> ss.removeItem fn.prefix key
+  ###
 
   fn.clear = -> ss.clear()
 
+  fn.get = (key) -> $.parseJson ss.getItem fn.prefix key
+
+  fn.prefix = (key) -> "cache::#{key}"
+
+  fn.remove = (key) -> ss.removeItem fn.prefix key
+
+  fn.set = (arg...) ->
+
+    switch arg.length
+
+      when 1
+        for key, value of arg[0]
+          if !value? then fn.remove key
+          else ss.setItem fn.prefix(key), $.parseString value
+
+      when 2
+        [key, value] = arg
+        if !value? then fn.remove key
+        else ss.setItem fn.prefix(key), $.parseString value
+
+      else throw new Error 'invalid argument length'
+
+    ss
+
   fn.size = -> ss.length
+
+  # return
+  $.session = fn

@@ -17,7 +17,16 @@ do ->
 
     msg
 
-  fn.clear = -> $layer.empty().addClass 'hidden'
+  ###
+
+    check()
+    clear()
+    hide($item, callback)
+    remove($item)
+    render($item, content)
+    show($item, callback)
+
+  ###
 
   fn.check = ->
 
@@ -30,12 +39,16 @@ do ->
     if $child.length > 5
       fn.remove $child.eq 0
 
+  fn.clear = -> $layer.empty().addClass 'hidden'
+
   fn.hide = ($item, callback) ->
     $item.animateBy 'fadeOut', ->
       fn.remove $item
       callback?()
 
-  fn.show = ($item, callback) -> $item.animateBy 'fadeIn', -> callback?()
+  fn.remove = ($item) ->
+    $item.next().remove()
+    $item.remove()
 
   fn.render = ($item, content) ->
 
@@ -53,10 +66,7 @@ do ->
     .appendTo $layer.removeClass 'hidden'
     .after '<br>'
 
-  fn.remove = ($item) ->
-    $item.next().remove()
-    $item.remove()
+  fn.show = ($item, callback) -> $item.animateBy 'fadeIn', -> callback?()
 
   # return
-
   $.info = fn

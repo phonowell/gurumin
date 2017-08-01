@@ -5,13 +5,13 @@ window.electron or= require?('electron') or {}
 app.check or= {}
 app.keyboard or= {}
 
-#open
+# open
 app.open = (url) ->
   plugin = electron.shell
   if !plugin then return
   plugin.openExternal url
 
-#clip
+# clip
 app.clip = (string) ->
   plugin = electron.clipboard
   if !plugin then return

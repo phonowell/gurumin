@@ -68,7 +68,7 @@ app.check.push = ->
   plugin.enablePush()
   plugin.checkIntent null, (data) -> app.receive data
 
-app.stat = (category, key, args) ->
+app.stat = (category, key, arg) ->
   plugin = anitama.stat
 
   if !plugin then return
@@ -78,13 +78,13 @@ app.stat = (category, key, args) ->
     plugin.start()
     return
 
-  $.i 'stat', "#{category} / #{key} / #{args}"
+  $.i 'stat', "#{category} / #{key} / #{arg}"
 
   # plugin
   plugin.event
     category: category
     key: key
-    args: args
+    args: arg
   , $.noop, $.noop
 
 app.exit = ->

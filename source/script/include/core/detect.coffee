@@ -1,4 +1,5 @@
 do ->
+
   ua = navigator.userAgent
   platform = navigator.platform
 
@@ -29,68 +30,92 @@ do ->
 
   if browser.webkit = !!webkit
     browser.version = webkit[1]
+
   if android
     os.android = true
     os.version = android[2]
+
   if iphone and not ipod
     os.ios = os.iphone = true
     os.version = iphone[2].replace /_/g, '.'
+
   if ipad
     os.ios = os.ipad = true
     os.version = ipad[2].replace /_/g, '.'
+
   if ipod
     os.ios = os.ipod = true
     os.version = if ipod[3] then ipod[3].replace(/_/g, '.') else null
+
   if wp
     os.wp = true
     os.version = wp[1]
+
   if webos
     os.webos = true
     os.version = webos[2]
+
   if touchpad
     os.touchpad = true
+
   if blackberry
     os.blackberry = true
     os.version = blackberry[2]
+
   if bb10
     os.bb10 = true
     os.version = bb10[2]
+
   if rimtabletos
     os.rimtabletos = true
     os.version = rimtabletos[2]
+
   if playbook
     browser.playbook = true
+
   if kindle
     os.kindle = true
     os.version = kindle[1]
+
   if silk
     browser.silk = true
     browser.version = silk[1]
+
   if !silk and os.android and ua.match /Kindle Fire/
     browser.silk = true
+
   if chrome
     browser.chrome = true
     browser.version = chrome[1]
+
   if firefox
     browser.firefox = true
     browser.version = firefox[1]
+
   if firefoxos
     os.firefoxos = true
     os.version = firefoxos[1]
+
   if ie
     browser.ie = true
     browser.version = ie[1]
+
   if safari and (osx or os.ios or win)
     browser.safari = true
     if !os.ios
       browser.version = safari[1]
+
   if webview
     browser.webview = true
+
   os.tablet = !!(ipad or playbook or (android and !ua.match /Mobile/) or (firefox and ua.match /Tablet/) or (ie and !ua.match(/Phone/) and ua.match /Touch/))
   os.phone = !!(!os.tablet and !os.ipod and (android or iphone or webos or blackberry or bb10 or (chrome and ua.match /Android/) or (chrome and ua.match /CriOS\/([\d.]+)/) or (firefox and ua.match /Mobile/) or (ie and ua.match /Touch/)))
 
 # check features
 do ->
+
+  if !$stage?.length then return
+
   list = []
   ua = navigator.userAgent
 
