@@ -14,6 +14,5 @@ $.fn.onAnimationEnd = (fn) ->
     animationend'
 
   @each ->
-
-    ($el = $ @).off EVENT
-    .one EVENT, (e) -> fn.apply $el
+    $el = $ @
+    $el.one EVENT, -> fn.apply $el
