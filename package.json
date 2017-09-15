@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/phonowell/gurumin",
   "devDependencies": {
-    "fire-keeper": "^0.0.34"
+    "fire-keeper": "0.0.72"
   },
   "dependencies": {}
 }

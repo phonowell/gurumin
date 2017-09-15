@@ -1,7 +1,7 @@
 # require
 
 $$ = require 'fire-keeper'
-{$, _, Promise, gulp} = $$.library
+{$, _, Promise} = $$.library
 co = Promise.coroutine
 
 # function
@@ -13,7 +13,8 @@ exclude = (arg) ->
     when 'string' then [arg]
     else throw new Error 'invalid argument type'
 
-  _.uniq list.push '!**/include/**'
+  list.push '!**/include/**'
+  list = _.uniq list
 
   # return
   list
@@ -28,7 +29,7 @@ exclude = (arg) ->
 
 $$.task 'lint', co ->
 
-  yield $$.task('link')()
+  yield $$.task('kokoro')()
 
   yield $$.lint './source/**/*.styl'
 
