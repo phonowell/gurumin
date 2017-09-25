@@ -255,17 +255,30 @@ app.download = (src, name) ->
   def = $.Deferred()
 
   fnDoneAndroid = ->
-    window.refreshMedia?.refresh? "#{cordova.file.externalRootDirectory}/Pictures/Anitama/#{name}"
+
+    target = "#{cordova.file.externalRootDirectory}/Pictures/Anitama/#{name}"
+    window.refreshMedia?.refresh? target
+
     def.resolve "已存储为/Pictures/Anitama/#{name}"
+
   fnDoneIOS = -> def.resolve '已存储至相册'
-  fnFail = (err) -> def.reject "#{err.source}\n#{err.target}\n#{err.code}"
+
+  fnFail = (err) ->
+    def.reject "#{err.source}\n#{err.target}\n#{err.code}"
 
   switch app.os
+
     when 'android'
+
       ft = new FileTransfer()
-      ft.download encodeURI(src), "#{cordova.file.externalRootDirectory}/Pictures/Anitama/#{name}", fnDoneAndroid, fnFail, true
+      ft.download encodeURI(src)
+      , "#{cordova.file.externalRootDirectory}/Pictures/Anitama/#{name}"
+      , fnDoneAndroid, fnFail, true
+
     when 'ios'
-      cordova.plugins?.socialSharing?.saveToPhotoAlbum [src], fnDoneIOS, fnFail
+
+      cordova.plugins?.socialSharing?.saveToPhotoAlbum [src]
+      , fnDoneIOS, fnFail
 
   def.promise()
 

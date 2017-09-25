@@ -7,8 +7,8 @@ $.timeStamp = (arg) ->
   if type != 'string' then return _.floor _.now(), -3
 
   str = _.trim arg
-    .replace /\s+/g, ' '
-    .replace /[-|/]/g, '.'
+  .replace /\s+/g, ' '
+  .replace /[-|/]/g, '.'
 
   date = new Date()
 
