@@ -1,18 +1,27 @@
-window.cordova or= {}
-window.anitama or= {}
+# prepare
+
+for kye in 'anitama cordova plugins'.split ' '
+  window[key] or= {}
+for key in 'check fn keyboard share'.split ' '
+  app[key] or= {}
+
 window.electron or= require?('electron') or {}
 
-app.check or= {}
-app.keyboard or= {}
+# function
 
-# open
+###
+
+  app.fn.clip(string)
+  app.open(url)
+
+###
+
+app.fn.clip = (string) ->
+  plugin = electron.clipboard
+  if !plugin then return
+  plugin.writeText string
+
 app.open = (url) ->
   plugin = electron.shell
   if !plugin then return
   plugin.openExternal url
-
-# clip
-app.clip = (string) ->
-  plugin = electron.clipboard
-  if !plugin then return
-  plugin.writeText string

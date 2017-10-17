@@ -2,10 +2,60 @@
 
 for key in 'anitama cordova plugins'.split ' '
   window[key] or= {}
-for key in 'check keyboard share'.split ' '
+for key in 'check fn keyboard share'.split ' '
   app[key] or= {}
 
 # function
+
+###
+
+  app.fn.clip(string)
+  app.fn.exit()
+  app.fn.feedback()
+  app.fn.fullScreen(option)
+
+  app.open(url)
+  app.open.InAppBrowser(url)
+  app.check.connection()
+  app.check.push()
+  app.stat(category, key, arg)
+  app.hideAppSplash()
+  app.share.submit(type, data)
+  app.translucent(param)
+  app.user.login(type, [callback])
+  app.check.isWechatInstalled()
+  app.keyboard.show()
+  app.keyboard.hide()
+  app.addSearchData(param)
+  app.remind(param)
+  app.clear([callback])
+  app.shareEx(opt)
+  app.download(src, name)
+  app.pageTransit(method, option)
+
+###
+
+app.fn.clip = (string) ->
+  plugin = cordova.plugins.clipboard
+  if !plugin then return
+  plugin.copy string
+
+app.fn.exit = ->
+  plugin = navigator.app
+  if !plugin then return
+  plugin.exitApp()
+
+app.fn.feedback = ->
+  plugin = anitama.feedback
+  if !plugin then return
+  plugin.openFeedback()
+
+app.fn.fullScreen = (option) ->
+  plugin = window.StatusBar
+  if !plugin then return
+
+  method = if option then 'hide' else 'show'
+  plugin[method]()
 
 app.open = (url) ->
 
@@ -38,15 +88,6 @@ app.open.InAppBrowser = (url) ->
     return
 
   plugin.open url, '_blank', 'zoom=no'
-
-app.fullScreen = (arg) ->
-
-  plugin = window.StatusBar
-
-  if !plugin then return
-
-  method = if arg then 'hide' else 'show'
-  plugin[method]()
 
 app.check.connection = ->
   app.connection = do ->
@@ -86,11 +127,6 @@ app.stat = (category, key, arg) ->
     key: key
     args: arg
   , $.noop, $.noop
-
-app.exit = ->
-  plugin = navigator.app
-  if !plugin then return
-  plugin.exitApp()
 
 app.hideAppSplash = ->
   plugin = navigator.splashscreen
@@ -139,11 +175,6 @@ app.translucent = (param) ->
   # plugin
   if param then plugin.enable()
   else plugin.disable()
-
-app.feedback = ->
-  plugin = anitama.feedback
-  if !plugin then return
-  plugin.openFeedback()
 
 app.user.login = (type, callback) ->
   plugin = anitama.share
@@ -198,11 +229,6 @@ app.keyboard.hide = ->
   plugin = cordova.plugins.Keyboard
   if !plugin then return
   plugin.close()
-
-app.clip = (string) ->
-  plugin = cordova.plugins.clipboard
-  if !plugin then return
-  plugin.copy string
 
 app.addSearchData = (param) ->
   if app.os != 'ios' then return

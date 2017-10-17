@@ -66,7 +66,8 @@ do ->
     .appendTo $layer.removeClass 'hidden'
     .after '<br>'
 
-  fn.show = ($item, callback) -> $item.animateBy 'fadeIn', -> callback?()
+  fn.show = ($item, callback) ->
+    $item.animateBy 'fadeIn', -> callback?()
 
   # return
   $.info = fn

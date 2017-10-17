@@ -2,27 +2,40 @@ do ->
 
   # function
 
-  fn = (key) ->
-    data = $.hash.parse()
+  fn = (key) -> fn.get key
+
+  ###
+
+    get([key])
+    parse([url])
+
+  ###
+
+  fn.get = (key) ->
+
+    data = fn.parse()
     if !key then return data
     data[key]
 
-  ###
+  fn.parse = (url) ->
 
-    parse(url)
-
-  ###
-
-  fn.parse = (
-    url = (
-      if cordova?.notCordova then location.hash
-      else $.session '_route'
+    url or= (
+      if cordova.notCordova then location.hash
+      else $.session 'pathname'
     ) or ''
-  ) ->
+
+    list = if !url.length then []
+    else
+      url.replace /.*#/, ''
+      .replace /[?&].*/, ''
+      .split ';'
+
     res = {}
-    for a in url.replace(/.*#/, '').replace(/[\?&].*/, '').split(';') when a.length
+    for a in list when a.length
       b = a.split '='
       res[b[0]] = decodeURIComponent b[1]
+
+    # return
     res
 
   # return
