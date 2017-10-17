@@ -13,6 +13,7 @@ for key in 'check fn keyboard share'.split ' '
   app.fn.exit()
   app.fn.feedback()
   app.fn.fullScreen(option)
+  app.fn.setOrientation(option)
 
   app.open(url)
   app.open.InAppBrowser(url)
@@ -56,6 +57,12 @@ app.fn.fullScreen = (option) ->
 
   method = if option then 'hide' else 'show'
   plugin[method]()
+
+app.fn.setOrientation = (option) ->
+  plugin = window.screen
+  if !plugin then return
+  plugin.orientation.lock option
+
 
 app.open = (url) ->
 
