@@ -9,8 +9,10 @@ for key in 'check fn keyboard share'.split ' '
 
 ###
 
+  app.fn.clearCache()
   app.fn.clip(string)
   app.fn.exit()
+  app.fn.download(src, name)
   app.fn.feedback()
   app.fn.fullScreen(option)
   app.fn.setOrientation(option)
@@ -29,12 +31,25 @@ for key in 'check fn keyboard share'.split ' '
   app.keyboard.hide()
   app.addSearchData(param)
   app.remind(param)
-  app.clear([callback])
   app.shareEx(opt)
-  app.download(src, name)
   app.pageTransit(method, option)
 
 ###
+
+app.fn.clearCache = ->
+
+  def = $.Deferred()
+
+  plugin = window.cache
+  if !plugin
+    return def.reject '该功能尚未就绪'
+
+  fnDone = (status) -> def.resolve status
+  fnFail = (status) -> def.reject status
+
+  plugin.clear fnDone, fnFail
+
+  def.promise()
 
 app.fn.clip = (string) ->
   plugin = cordova.plugins.clipboard
@@ -45,6 +60,40 @@ app.fn.exit = ->
   plugin = navigator.app
   if !plugin then return
   plugin.exitApp()
+
+app.fn.download = (source, filename) ->
+
+  def = $.Deferred()
+
+  fnDoneAndroid = ->
+
+    target = "#{cordova.file.externalRootDirectory}/Pictures/Anitama/#{filename}"
+    window.refreshMedia?.refresh? target
+
+    def.resolve "已存储至/Pictures/Anitama"
+
+  fnDoneIOS = -> def.resolve '已存储至相册'
+
+  fnFail = (err) ->
+    def.reject "#{err.source}\n#{err.target}\n#{err.code}"
+
+  switch app.os
+
+    when 'android'
+
+      ft = new FileTransfer()
+      ft.download encodeURI(source)
+      , "#{cordova.file.externalRootDirectory}/Pictures/Anitama/#{filename}"
+      , fnDoneAndroid, fnFail, true
+
+    when 'ios'
+
+      cordova.plugins?.socialSharing?.saveToPhotoAlbum [source]
+      , fnDoneIOS, fnFail
+
+    else throw new Error "invalid os <#{app.os}>"
+
+  def.promise()
 
 app.fn.feedback = ->
   plugin = anitama.feedback
@@ -63,6 +112,7 @@ app.fn.setOrientation = (option) ->
   if !plugin then return
   plugin.orientation.lock option
 
+#
 
 app.open = (url) ->
 
@@ -257,12 +307,6 @@ app.remind = (param) ->
   if !plugin then return
   plugin.remind param, _.noop, (msg) -> $.info msg
 
-app.clear = (callback = _.noop) ->
-  plugin = window.cache
-  if !plugin then return
-  cache.clear callback, _.noop
-  # cache.cleartemp()
-
 app.shareEx = (opt) ->
   def = $.Deferred()
   plugin = cordova.plugins.socialSharing
@@ -281,37 +325,6 @@ app.shareEx = (opt) ->
     url: opt.url or ''
     chooserTitle: '分享'
   , fnDone, fnFail
-
-  def.promise()
-
-app.download = (src, name) ->
-  def = $.Deferred()
-
-  fnDoneAndroid = ->
-
-    target = "#{cordova.file.externalRootDirectory}/Pictures/Anitama/#{name}"
-    window.refreshMedia?.refresh? target
-
-    def.resolve "已存储为/Pictures/Anitama/#{name}"
-
-  fnDoneIOS = -> def.resolve '已存储至相册'
-
-  fnFail = (err) ->
-    def.reject "#{err.source}\n#{err.target}\n#{err.code}"
-
-  switch app.os
-
-    when 'android'
-
-      ft = new FileTransfer()
-      ft.download encodeURI(src)
-      , "#{cordova.file.externalRootDirectory}/Pictures/Anitama/#{name}"
-      , fnDoneAndroid, fnFail, true
-
-    when 'ios'
-
-      cordova.plugins?.socialSharing?.saveToPhotoAlbum [src]
-      , fnDoneIOS, fnFail
 
   def.promise()
 
