@@ -15,14 +15,14 @@ for key in 'check fn keyboard share'.split ' '
   app.fn.download(src, name)
   app.fn.feedback()
   app.fn.fullScreen(option)
+  app.fn.hideSplash()
   app.fn.setOrientation(option)
 
-  app.open(url)
-  app.open.InAppBrowser(url)
+  app.open(url, [target], [option])
+  app.open.InAppBrowser(url, [target], [option])
   app.check.connection()
   app.check.push()
   app.stat(category, key, arg)
-  app.hideAppSplash()
   app.share.submit(type, data)
   app.translucent(param)
   app.user.login(type, [callback])
@@ -107,6 +107,11 @@ app.fn.fullScreen = (option) ->
   method = if option then 'hide' else 'show'
   plugin[method]()
 
+app.fn.hideSplash = ->
+  plugin = navigator.splashscreen
+  if !plugin then return
+  plugin.hide()
+
 app.fn.setOrientation = (option) ->
   plugin = window.screen
   if !plugin then return
@@ -114,37 +119,30 @@ app.fn.setOrientation = (option) ->
 
 #
 
-app.open = (url) ->
+app.open = (url, target, option) ->
 
   if app.os != 'ios'
-    app.open.InAppBrowser url
-    return
+    return app.open.InAppBrowser url, target, option
 
   plugin = window.SafariViewController
-
   if !plugin then return
 
   plugin.isAvailable (available) ->
 
     if !available
-      app.open.InAppBrowser url
-      return
+      return app.open.InAppBrowser url, target, option
 
     plugin.show {url}
 
-app.open.InAppBrowser = (url) ->
+app.open.InAppBrowser = (url, target = '_blank', option = 'zoom=no') ->
 
   plugin = cordova.InAppBrowser
 
   if !plugin
+    # fall back
+    return window.open url
 
-    # fall back to window.open()
-
-    window.open url
-
-    return
-
-  plugin.open url, '_blank', 'zoom=no'
+  plugin.open url, target, option
 
 app.check.connection = ->
   app.connection = do ->
@@ -185,18 +183,14 @@ app.stat = (category, key, arg) ->
     args: arg
   , $.noop, $.noop
 
-app.hideAppSplash = ->
-  plugin = navigator.splashscreen
-  if !plugin then return
-  plugin.hide()
-
 app.share.submit = (type, data) ->
+
   def = $.Deferred()
+
   plugin = anitama.share
 
   if !plugin
-    def.reject '相关插件暂不可用'
-    return def.promise()
+    return def.reject '相关插件暂不可用'
 
   # map
   map =
@@ -207,30 +201,27 @@ app.share.submit = (type, data) ->
     qqzone: 'QQZone'
     tieba: 'Tieba'
 
-  # check fn
-  fn = plugin["share#{map[type]}"]
-  if !fn
-    def.reject '相关方法暂不可用'
-    return def.promise()
+  fnShare = plugin["share#{map[type]}"]
+  if !fnShare
+    return def.reject '相关方法暂不可用'
 
-  # plugin
-  fn data
-  , (msg) ->
-    # do not write the lines below & upon into a SINGLE line
-    def.resolve msg # done
-  , (msg) -> def.reject msg # fail
+  fnDone = (msg) -> def.resolve msg
+  fnFail = (msg) -> def.reject msg
+
+  fnShare data, fnDone, fnFail
 
   def.promise()
 
-app.translucent = (param) ->
-  if !(app.os == 'android' and ~$.os.version.search '4.4') then return
+app.translucent = (option) ->
+
+  unless app.os == 'android' and ~$.os.version.search '4.4'
+    return
 
   plugin = window.statusbarTransparent
-
   if !plugin then return
 
   # plugin
-  if param then plugin.enable()
+  if option then plugin.enable()
   else plugin.disable()
 
 app.user.login = (type, callback) ->
