@@ -11,28 +11,30 @@ for key in 'check fn keyboard share'.split ' '
 
   app.fn.clearCache()
   app.fn.clip(string)
-  app.fn.exit()
   app.fn.download(src, name)
+  app.fn.enablePermission(name)
+  app.fn.exit()
   app.fn.feedback()
   app.fn.fullScreen(option)
   app.fn.hideSplash()
+  app.fn.refreshGallery(source)
   app.fn.setOrientation(option)
 
+  app.addSearchData(param)
+  app.check.connection()
+  app.check.isWechatInstalled()
+  app.check.push()
+  app.keyboard.hide()
+  app.keyboard.show()
   app.open(url, [target], [option])
   app.open.InAppBrowser(url, [target], [option])
-  app.check.connection()
-  app.check.push()
-  app.stat(category, key, arg)
+  app.pageTransit(method, option)
+  app.remind(param)
   app.share.submit(type, data)
+  app.shareEx(opt)
+  app.stat(category, key, arg)
   app.translucent(param)
   app.user.login(type, [callback])
-  app.check.isWechatInstalled()
-  app.keyboard.show()
-  app.keyboard.hide()
-  app.addSearchData(param)
-  app.remind(param)
-  app.shareEx(opt)
-  app.pageTransit(method, option)
 
 ###
 
@@ -56,44 +58,88 @@ app.fn.clip = (string) ->
   if !plugin then return
   plugin.copy string
 
-app.fn.exit = ->
-  plugin = navigator.app
-  if !plugin then return
-  plugin.exitApp()
-
 app.fn.download = (source, filename) ->
+
+  [source, target] = switch app.os
+    when 'android'
+      [
+        encodeURI source
+        encodeURI "#{cordova.file.externalRootDirectory}Pictures/Anitama/#{filename}"
+      ]
+    else [source, '']
 
   def = $.Deferred()
 
-  fnDoneAndroid = ->
-
-    target = "#{cordova.file.externalRootDirectory}/Pictures/Anitama/#{filename}"
-    window.refreshMedia?.refresh? target
-
-    def.resolve "已存储至/Pictures/Anitama"
-
-  fnDoneIOS = -> def.resolve '已存储至相册'
+  fnDone = ->
+    app.fn.refreshGallery target
+    def.resolve '已存储至相册'
 
   fnFail = (err) ->
-    def.reject "#{err.source}\n#{err.target}\n#{err.code}"
+    
+    msg = switch app.os
+      when 'android'
+        listMsg = []
+        listMsg.push "source: #{err.source}"
+        listMsg.push "target: #{err.target}"
+        listMsg.push "error code: #{err.code}"
+        listMsg.join '\n'
+      else err
+    
+    def.reject msg
 
   switch app.os
 
     when 'android'
 
-      ft = new FileTransfer()
-      ft.download encodeURI(source)
-      , "#{cordova.file.externalRootDirectory}/Pictures/Anitama/#{filename}"
-      , fnDoneAndroid, fnFail, true
+      app.fn.enablePermission 'WRITE_EXTERNAL_STORAGE'
+      .fail (msg) -> $.info msg
+      .done ->
+
+        ft = new FileTransfer()
+        ft.download source, target
+        , fnDone, fnFail
 
     when 'ios'
 
-      cordova.plugins?.socialSharing?.saveToPhotoAlbum [source]
-      , fnDoneIOS, fnFail
+      plugin = cordova.plugins.socialSharing
+
+      plugin.saveToPhotoAlbum [source]
+      , fnDone, fnFail
 
     else throw new Error "invalid os <#{app.os}>"
 
   def.promise()
+
+app.fn.enablePermission = (name) ->
+
+  def = $.Deferred()
+
+  if app.os != 'android'
+    return def.resolve()
+
+  unless plugin = cordova.plugins.permissions
+    return def.reject '相关插件暂不可用'
+
+  if !name?.length
+    return def.reject '不可用的非法权限'
+  name = name.toUpperCase()
+
+  plugin.checkPermission plugin[name], (status) ->
+    
+    if status.hasPermission
+      return def.resolve '权限已获取'
+
+    fnDone = -> def.resolve '权限获取成功'
+    fnFail = -> def.reject '权限获取失败'
+    plugin.requestPermission plugin[name], fnDone, fnFail
+
+  # return
+  def.promise()
+
+app.fn.exit = ->
+  plugin = navigator.app
+  if !plugin then return
+  plugin.exitApp()
 
 app.fn.feedback = ->
   plugin = anitama.feedback
@@ -111,6 +157,13 @@ app.fn.hideSplash = ->
   plugin = navigator.splashscreen
   if !plugin then return
   plugin.hide()
+
+app.fn.refreshGallery = (source) ->
+  if app.os != 'android' then return
+  if !source?.length then return
+  plugin = window.refreshMedia
+  if !plugin then return
+  plugin.refresh source
 
 app.fn.setOrientation = (option) ->
   plugin = window.screen
@@ -306,7 +359,7 @@ app.shareEx = (opt) ->
     def.reject 'cordova.plugins.socialSharing is undefined'
     return def.promise()
 
-  fnDone = (res) -> def.resove res
+  fnDone = (res) -> def.resolve res
   fnFail = (msg) -> def.reject msg
 
   plugin.shareWithOptions
@@ -319,7 +372,6 @@ app.shareEx = (opt) ->
 
   def.promise()
 
-# http://plugins.telerik.com/cordova/plugin/native-page-transitions
 app.pageTransit = (method, option) ->
 
   plugin = window.plugins.nativepagetransitions
