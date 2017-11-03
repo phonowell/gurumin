@@ -9,6 +9,7 @@ for key in 'check fn keyboard share'.split ' '
 
 ###
 
+  app.fn.addSearchData(data)
   app.fn.clearCache()
   app.fn.clip(string)
   app.fn.download(src, name)
@@ -17,26 +18,31 @@ for key in 'check fn keyboard share'.split ' '
   app.fn.feedback()
   app.fn.fullScreen(option)
   app.fn.hideSplash()
+  app.fn.open(source, [target], [option])
+  app.fn.openInside(source, [target], [option])
   app.fn.refreshGallery(source)
+  app.fn.remind(data)
   app.fn.setOrientation(option)
+  app.fn.setStatusbarColor(color)
 
-  app.addSearchData(param)
   app.check.connection()
   app.check.isWechatInstalled()
   app.check.push()
   app.keyboard.hide()
   app.keyboard.show()
-  app.open(url, [target], [option])
-  app.open.InAppBrowser(url, [target], [option])
   app.pageTransit(method, option)
-  app.remind(param)
   app.share.submit(type, data)
   app.shareEx(opt)
   app.stat(category, key, arg)
-  app.translucent(param)
   app.user.login(type, [callback])
 
 ###
+
+app.fn.addSearchData = (data) ->
+  if app.os != 'ios' then return
+  plugin = anitama.push
+  if !plugin then return
+  plugin.addSearchData data
 
 app.fn.clearCache = ->
 
@@ -149,7 +155,6 @@ app.fn.feedback = ->
 app.fn.fullScreen = (option) ->
   plugin = window.StatusBar
   if !plugin then return
-
   method = if option then 'hide' else 'show'
   plugin[method]()
 
@@ -158,24 +163,10 @@ app.fn.hideSplash = ->
   if !plugin then return
   plugin.hide()
 
-app.fn.refreshGallery = (source) ->
-  if app.os != 'android' then return
-  if !source?.length then return
-  plugin = window.refreshMedia
-  if !plugin then return
-  plugin.refresh source
-
-app.fn.setOrientation = (option) ->
-  plugin = window.screen
-  if !plugin then return
-  plugin.orientation.lock option
-
-#
-
-app.open = (url, target, option) ->
+app.fn.open = (source, target, option) ->
 
   if app.os != 'ios'
-    return app.open.InAppBrowser url, target, option
+    return app.fn.openInside source, target, option
 
   plugin = window.SafariViewController
   if !plugin then return
@@ -183,11 +174,11 @@ app.open = (url, target, option) ->
   plugin.isAvailable (available) ->
 
     if !available
-      return app.open.InAppBrowser url, target, option
+      return app.fn.openInside source, target, option
 
-    plugin.show {url}
+    plugin.show url: source
 
-app.open.InAppBrowser = (url, target = '_blank', option = 'zoom=no') ->
+app.fn.openInside = (url, target = '_blank', option = {}) ->
 
   plugin = cordova.InAppBrowser
 
@@ -195,7 +186,37 @@ app.open.InAppBrowser = (url, target = '_blank', option = 'zoom=no') ->
     # fall back
     return window.open url
 
+  option = _.merge
+    location: 'no'
+    zoom: 'no'
+  , option
+  option = ("#{key}=#{value}" for key, value of option).join ','
+
   plugin.open url, target, option
+
+app.fn.refreshGallery = (source) ->
+  if app.os != 'android' then return
+  if !source?.length then return
+  plugin = window.refreshMedia
+  if !plugin then return
+  plugin.refresh source
+
+app.fn.remind = (data) ->
+  plugin = anitama.toolkit
+  if !plugin then return
+  plugin.remind data
+
+app.fn.setOrientation = (option) ->
+  plugin = window.screen
+  if !plugin then return
+  plugin.orientation.lock option
+
+app.fn.setStatusbarColor = (color) ->
+  plugin = window.StatusBar
+  if !plugin then return
+  plugin.backgroundColorByHexString color
+
+#
 
 app.check.connection = ->
   app.connection = do ->
@@ -265,18 +286,6 @@ app.share.submit = (type, data) ->
 
   def.promise()
 
-app.translucent = (option) ->
-
-  unless app.os == 'android' and ~$.os.version.search '4.4'
-    return
-
-  plugin = window.statusbarTransparent
-  if !plugin then return
-
-  # plugin
-  if option then plugin.enable()
-  else plugin.disable()
-
 app.user.login = (type, callback) ->
   plugin = anitama.share
 
@@ -330,26 +339,6 @@ app.keyboard.hide = ->
   plugin = cordova.plugins.Keyboard
   if !plugin then return
   plugin.close()
-
-app.addSearchData = (param) ->
-  if app.os != 'ios' then return
-
-  plugin = anitama.push
-
-  if !plugin then return
-
-  p = _.clone param
-
-  plugin.addSearchData
-    id: p.aid
-    title: p.title
-    content: p.content
-  , _.noop, _.noop
-
-app.remind = (param) ->
-  plugin = anitama.toolkit
-  if !plugin then return
-  plugin.remind param, _.noop, (msg) -> $.info msg
 
 app.shareEx = (opt) ->
   def = $.Deferred()

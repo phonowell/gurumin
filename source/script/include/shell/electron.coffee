@@ -12,7 +12,7 @@ window.electron or= require?('electron') or {}
 ###
 
   app.fn.clip(string)
-  app.open(url)
+  app.fn.open(url)
 
 ###
 
@@ -21,7 +21,7 @@ app.fn.clip = (string) ->
   if !plugin then return
   plugin.writeText string
 
-app.open = (url) ->
+app.fn.open = (url) ->
   plugin = electron.shell
   if !plugin then return
   plugin.openExternal url
