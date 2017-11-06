@@ -24,6 +24,7 @@ for key in 'check fn keyboard share'.split ' '
   app.fn.remind(data)
   app.fn.setOrientation(option)
   app.fn.setStatusbarColor(color)
+  app.fn.shareEx(option)
 
   app.check.connection()
   app.check.isWechatInstalled()
@@ -32,7 +33,6 @@ for key in 'check fn keyboard share'.split ' '
   app.keyboard.show()
   app.pageTransit(method, option)
   app.share.submit(type, data)
-  app.shareEx(opt)
   app.stat(category, key, arg)
   app.user.login(type, [callback])
 
@@ -187,6 +187,7 @@ app.fn.openInside = (url, target = '_blank', option = {}) ->
     return window.open url
 
   option = _.merge
+    disallowoverscroll: 'yes'
     location: 'no'
     zoom: 'no'
   , option
@@ -215,6 +216,18 @@ app.fn.setStatusbarColor = (color) ->
   plugin = window.StatusBar
   if !plugin then return
   plugin.backgroundColorByHexString color
+
+app.fn.shareEx = (option) ->
+
+  plugin = window.plugins.socialsharing
+  if !plugin then return
+
+  plugin.shareWithOptions
+    chooserTitle: '分享'
+    files: [option.src]
+    message: option.message
+    subject: option.subject or '来自Anitama的分享'
+    url: option.url
 
 #
 
@@ -339,27 +352,6 @@ app.keyboard.hide = ->
   plugin = cordova.plugins.Keyboard
   if !plugin then return
   plugin.close()
-
-app.shareEx = (opt) ->
-  def = $.Deferred()
-  plugin = cordova.plugins.socialSharing
-
-  if !plugin
-    def.reject 'cordova.plugins.socialSharing is undefined'
-    return def.promise()
-
-  fnDone = (res) -> def.resolve res
-  fnFail = (msg) -> def.reject msg
-
-  plugin.shareWithOptions
-    message: opt.message or ''
-    subject: opt.subject or '来自Anitama的分享'
-    files: [opt.src]
-    url: opt.url or ''
-    chooserTitle: '分享'
-  , fnDone, fnFail
-
-  def.promise()
 
 app.pageTransit = (method, option) ->
 
