@@ -25,25 +25,43 @@ do ->
         style: {}
         script: {}
 
-    set: (data) -> @setting = _.merge @setting, data
+    ###
+
+      fill(list, map, type)
+      get(map, callback)
+      getHtml(path)
+      getScript(path)
+      getStyle(path)
+      set(data)
+      when(def, list, callback)
+
+    ###
+
+    fill: (list, map, type) ->
+
+      if !map[type] then return
+
+      for a in map[type] when a
+        list.push @["get#{_.capitalize type}"] a
 
     get: (map, callback) ->
 
+      def = $.Deferred()
       hash = $.parseString map
       p = @port.main
 
       switch p[hash]
 
-        when 'pending' then return
+        when 'pending'
+          def.reject 'pending'
 
         when 'resolved'
-          $.Deferred().resolve()
+          def.resolve()
           callback?()
 
         else
 
           p[hash] = 'pending'
-          def = $.Deferred()
 
           @fill list = [], map, 'html'
           @fill list, map, 'style'
@@ -60,33 +78,20 @@ do ->
 
           def.promise()
 
-    fill: (list, map, type) ->
-
-      if !map[type] then return
-
-      for a in map[type] when a
-        list.push @["get#{_.capitalize type}"] a
-
-    when: (def, list, callback) ->
-
-      $.when.apply $, list
-      .fail (msg) -> def.reject msg
-      .done -> callback?()
-
     getHtml: (path) ->
 
+      def = $.Deferred()
       s = @setting.html
       p = @port.html
 
       switch p[path]
 
-        when 'pending' then return
-        when 'resolved' then $.Deferred().resolve()
+        when 'pending' then def.reject 'pending'
+        when 'resolved' then def.resolve()
 
         else
 
           p[path] = 'pending'
-          def = $.Deferred()
 
           $.get "#{s.prefix}#{path}#{s.suffix}"
           .fail ->
@@ -100,20 +105,45 @@ do ->
 
           def.promise()
 
+    getScript: (path) ->
+
+      def = $.Deferred()
+      s = @setting.script
+      p = @port.script
+
+      switch p[path]
+
+        when 'pending' then def.reject 'pending'
+        when 'resolved' then def.resolve()
+
+        else
+
+          p[path] = 'pending'
+
+          $.getScript "#{s.prefix}#{path}#{s.suffix}"
+          .fail ->
+            p[path] = 'rejected'
+            def.reject "'#{path}.js' not found"
+          .done ->
+            p[path] = 'resolved'
+            def.resolve()
+
+          def.promise()
+
     getStyle: (path) ->
 
+      def = $.Deferred()
       s = @setting.style
       p = @port.style
 
       switch p[path]
 
-        when 'pending' then return
-        when 'resolved' then $.Deferred().resolve()
+        when 'pending' then def.reject 'pending'
+        when 'resolved' then def.resolve()
 
         else
 
           p[path] = 'pending'
-          def = $.Deferred()
 
           $ '<link>'
           .one 'error', ->
@@ -129,30 +159,13 @@ do ->
 
           def.promise()
 
-    getScript: (path) ->
+    set: (data) -> @setting = _.merge @setting, data
 
-      s = @setting.script
-      p = @port.script
+    when: (def, list, callback) ->
 
-      switch p[path]
-
-        when 'pending' then return
-        when 'resolved' then $.Deferred().resolve()
-
-        else
-
-          p[path] = 'pending'
-          def = $.Deferred()
-
-          $.getScript "#{s.prefix}#{path}#{s.suffix}"
-          .fail ->
-            p[path] = 'rejected'
-            def.reject "'#{path}.js' not found"
-          .done ->
-            p[path] = 'resolved'
-            def.resolve()
-
-          def.promise()
+      $.when.apply $, list
+      .fail (msg) -> def.reject msg
+      .done -> callback?()
 
   fn = (arg, callback) ->
 
