@@ -7,173 +7,141 @@ do ->
 
     constructor: ->
 
+      @cache =
+        html: {}
+        script: {}
+        style: {}
+
       @setting =
         html:
+          callback: (html) -> $body.append html
           prefix: 'html/'
           suffix: ".html?salt=#{app.salt}"
-          callback: (html) -> $body.append html
-        style:
-          prefix: 'style/'
-          suffix: ".css?salt=#{app.salt}"
         script:
           prefix: 'script/'
           suffix: ".js?salt=#{app.salt}"
-
-      @port =
-        main: {}
-        html: {}
-        style: {}
-        script: {}
+        style:
+          prefix: 'style/'
+          suffix: ".css?salt=#{app.salt}"
 
     ###
 
-      fill(list, map, type)
       get(map, callback)
       getHtml(path)
       getScript(path)
       getStyle(path)
       set(data)
-      when(def, list, callback)
 
     ###
-
-    fill: (list, map, type) ->
-
-      if !map[type] then return
-
-      for a in map[type] when a
-        list.push @["get#{_.capitalize type}"] a
 
     get: (map, callback) ->
 
       def = $.Deferred()
-      hash = $.parseString map
-      p = @port.main
 
-      switch p[hash]
+      # style
+      listDeferred = (@getStyle src for src in map.style)
+      $.when.apply $, listDeferred
+      .fail (msg) -> def.reject msg
+      .done =>
 
-        when 'pending'
-          def.reject 'pending'
+        # html
+        listDeferred = (@getHtml src for src in map.html)
+        $.when.apply $, listDeferred
+        .fail (msg) -> def.reject msg
+        .done =>
 
-        when 'resolved'
-          def.resolve()
-          callback?()
-
-        else
-
-          p[hash] = 'pending'
-
-          @fill list = [], map, 'html'
-          @fill list, map, 'style'
-
-          @when def, list, =>
-
-            @fill list = [], map, 'script'
-
-            @when def, list, ->
-
-              p[hash] = 'resolved'
-              def.resolve()
-              callback?()
-
-          def.promise()
-
-    getHtml: (path) ->
-
-      def = $.Deferred()
-      s = @setting.html
-      p = @port.html
-
-      switch p[path]
-
-        when 'pending' then def.reject 'pending'
-        when 'resolved' then def.resolve()
-
-        else
-
-          p[path] = 'pending'
-
-          $.get "#{s.prefix}#{path}#{s.suffix}"
-          .fail ->
-            p[path] = 'rejected'
-            def.reject "'#{path}.html' not found"
-          .done (html) ->
-            $.i 'require', "#{path}.html"
-            p[path] = 'resolved'
-            s.callback html, path
-            def.resolve()
-
-          def.promise()
-
-    getScript: (path) ->
-
-      def = $.Deferred()
-      s = @setting.script
-      p = @port.script
-
-      switch p[path]
-
-        when 'pending' then def.reject 'pending'
-        when 'resolved' then def.resolve()
-
-        else
-
-          p[path] = 'pending'
-
-          $.getScript "#{s.prefix}#{path}#{s.suffix}"
-          .fail ->
-            p[path] = 'rejected'
-            def.reject "'#{path}.js' not found"
+          # script
+          listDeferred = (@getScript src for src in map.script)
+          $.when.apply $, listDeferred
+          .fail (msg) -> def.reject msg
           .done ->
-            p[path] = 'resolved'
+
             def.resolve()
+            callback?()
 
-          def.promise()
+      # return
+      def.promise()
 
-    getStyle: (path) ->
+    getHtml: (source) ->
+
+      filename = "#{source}.html"
+
+      if @cache.html[source]
+        $.i 'require', "hit '#{filename}'"
+        return @cache.html[source]
 
       def = $.Deferred()
-      s = @setting.style
-      p = @port.style
+      setting = @setting.html
+      url = "#{setting.prefix}#{source}#{setting.suffix}"
 
-      switch p[path]
+      $.get url
+      .fail -> def.reject "'#{filename}' not found"
+      .done (html) ->
+        $.i 'require', "loaded '#{filename}'"
+        setting.callback html, source
+        def.resolve()
 
-        when 'pending' then def.reject 'pending'
-        when 'resolved' then def.resolve()
+      # return
+      @cache.html[source] = def.promise()
 
-        else
+    getScript: (source) ->
 
-          p[path] = 'pending'
+      filename = "#{source}.js"
 
-          $ '<link>'
-          .one 'error', ->
-            p[path] = 'rejected'
-            def.reject "'#{path}.css' not found"
-          .one 'load', ->
-            p[path] = 'resolved'
-            def.resolve()
-          .attr
-            href: "#{s.prefix}#{path}#{s.suffix}"
-            rel: 'stylesheet'
-          .appendTo $head
+      if @cache.script[source]
+        $.i 'require', "hit '#{filename}'"
+        return @cache.script[source]
 
-          def.promise()
+      def = $.Deferred()
+      setting = @setting.script
+      url = "#{setting.prefix}#{source}#{setting.suffix}"
+
+      $.getScript url
+      .fail -> def.reject "'#{filename}' not found"
+      .done ->
+        $.i 'require', "loaded '#{filename}'"
+        def.resolve()
+
+      # return
+      @cache.script[source] = def.promise()
+
+    getStyle: (source) ->
+
+      filename = "#{source}.css"
+
+      if @cache.style[source]
+        $.i 'require', "hit '#{filename}'"
+        return @cache.style[source]
+
+      def = $.Deferred()
+      setting = @setting.style
+      url = "#{setting.prefix}#{source}#{setting.suffix}"
+
+      $ '<link>'
+      .one 'error', -> def.reject "'#{filename}' not found"
+      .one 'load', ->
+        $.i 'require', "loaded '#{filename}'"
+        def.resolve()
+      .attr
+        href: url
+        rel: 'stylesheet'
+      .appendTo $head
+
+      # return
+      @cache.style[source] = def.promise()
 
     set: (data) -> @setting = _.merge @setting, data
 
-    when: (def, list, callback) ->
-
-      $.when.apply $, list
-      .fail (msg) -> def.reject msg
-      .done -> callback?()
-
   fn = (arg, callback) ->
 
-    if !arg then return fn.fn or= new Require()
+    # init
+    if !arg
+      if fn.handle then throw new Error 'cannot init twice'
+      return fn.handle = new Require()
 
     type = $.type arg
 
-    # when argument is array
+    # when argument is an array
 
     if type == 'array'
 
@@ -187,7 +155,7 @@ do ->
 
       return def.promise()
 
-    # not array
+    # when argument is not array
 
     map = switch type
 
@@ -200,14 +168,17 @@ do ->
 
       else throw new Error 'invalid argument type'
 
-    for key, value of map
+    for key in ['html', 'script', 'style']
+
+      value = map[key] or= []
+
       if $.type(value) != 'array'
         map[key] = [value]
+
       $.unique map[key]
 
     # execute
-    fn.fn.get map, callback
+    fn.handle.get map, callback
 
   # return
-
   $.require = fn
