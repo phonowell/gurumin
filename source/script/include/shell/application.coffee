@@ -66,32 +66,26 @@ app.fn.clip = (string) ->
 
 app.fn.download = (source, filename) ->
 
-  [source, target] = switch app.os
-    when 'android'
-      [
-        encodeURI source
-        encodeURI "#{cordova.file.externalRootDirectory}Pictures/Anitama/#{filename}"
-      ]
-    else [source, '']
+  # function
 
-  def = $.Deferred()
+  ###
 
-  fnDone = ->
-    app.fn.refreshGallery target
+    onError()
+    onSuccess(entry)
+
+  ###
+
+  onError = -> def.reject '下载文件失败'
+  onSuccess = (entry) ->
+
+    if app.os == 'android'
+      app.fn.refreshGallery entry.toURL()
+
     def.resolve '已存储至相册'
 
-  fnFail = (err) ->
-    
-    msg = switch app.os
-      when 'android'
-        listMsg = []
-        listMsg.push "source: #{err.source}"
-        listMsg.push "target: #{err.target}"
-        listMsg.push "error code: #{err.code}"
-        listMsg.join '\n'
-      else err
-    
-    def.reject msg
+  # execute
+
+  def = $.Deferred()
 
   switch app.os
 
@@ -102,15 +96,21 @@ app.fn.download = (source, filename) ->
       .done ->
 
         ft = new FileTransfer()
-        ft.download source, target
-        , fnDone, fnFail
+        source = encodeURI source
+        target = encodeURI "#{cordova.file.externalRootDirectory}Pictures/Anitama/#{filename}"
+        
+        ft.download encodeURI(source)
+        , encodeURI("#{cordova.file.externalRootDirectory}Pictures/Anitama/#{filename}")
+        , onSuccess
+        , onError
 
     when 'ios'
 
-      plugin = cordova.plugins.socialSharing
-
-      plugin.saveToPhotoAlbum [source]
-      , fnDone, fnFail
+      plugin = window.plugins.socialsharing
+      if !plugin
+        return def.reject '相关插件暂不可用'
+        
+      plugin.saveToPhotoAlbum source, onSuccess, onError
 
     else throw new Error "invalid os <#{app.os}>"
 
