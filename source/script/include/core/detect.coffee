@@ -3,8 +3,8 @@ do ->
   ua = navigator.userAgent
   platform = navigator.platform
 
-  os = $.os = {}
-  browser = $.browser = {}
+  os = {}
+  browser = {}
   webkit = ua.match(/Web[kK]it[\/]{0,1}([\d.]+)/)
   android = ua.match(/(Android);?[\s\/]+([\d.]+)?/)
   osx = !!ua.match(/\(Macintosh\; Intel /)
@@ -110,6 +110,10 @@ do ->
 
   os.tablet = !!(ipad or playbook or (android and !ua.match /Mobile/) or (firefox and ua.match /Tablet/) or (ie and !ua.match(/Phone/) and ua.match /Touch/))
   os.phone = !!(!os.tablet and !os.ipod and (android or iphone or webos or blackberry or bb10 or (chrome and ua.match /Android/) or (chrome and ua.match /CriOS\/([\d.]+)/) or (firefox and ua.match /Mobile/) or (ie and ua.match /Touch/)))
+
+  # return
+  $.os = os
+  $.browser = browser
 
 # check features
 do ->

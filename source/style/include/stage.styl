@@ -5,6 +5,8 @@
   background-color #fff
   margin auto
   padding 0
+  padding-top constant(safe-area-inset-top)
+  padding-bottom constant(safe-area-inset-bottom)
   font-size 14px
   font-family 'lucida grande', 'lucida sans unicode', lucida, helvetica, 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif
 
@@ -44,13 +46,6 @@
   status('user', 'login')
   status('device', 'desktop')
   status('mode', 'debug')
-
-// color
-.color-main
-  background-color $color-main
-
-.color-night
-  background-color $color-night
 
 // class
 
