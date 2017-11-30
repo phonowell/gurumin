@@ -7,13 +7,15 @@
   z-index 1
   position fixed
   bottom 0
-  box-shadow 0 -1px 0 #ececec
   text-align center
   font-size 0
 
   .theme-night &
     background-color #222
     border-color #111
+
+    &:before
+      display none
 
     .item
       color #999
@@ -30,12 +32,23 @@
       color #666
 
   .bar-transparent &
+    padding-bottom 0
     padding-bottom constant(safe-area-inset-bottom)
 
   &.animate-in
     animation fadeIn 250ms ease
   &.animate-out
     animation fadeOut 350ms ease
+
+  &:before
+    content ''
+    display block
+    position absolute
+    height 1px
+    width 100%
+    left 0
+    top -1px
+    background #ececec
 
   .item
     display inline-block
@@ -144,6 +157,9 @@
   .bar-transparent &
     padding-bottom 0
     bottom constant(safe-area-inset-bottom)
+
+  &:before
+    display none
 
   .icon
     display block

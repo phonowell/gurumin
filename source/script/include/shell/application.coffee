@@ -240,16 +240,15 @@ app.check.connection = ->
     plugin.type
 
 app.check.push = ->
-  plugin = anitama.push
 
+  plugin = anitama.push
   if !plugin then return
 
   if !app.config 'push'
-    plugin.disablePush()
-    return
+    return plugin.disablePush()
 
   plugin.enablePush()
-  plugin.checkIntent null, (data) -> app.receive data
+  plugin.checkIntent null, (data) -> app.fn.receive data
 
 app.stat = (category, key, arg) ->
   plugin = anitama.stat
