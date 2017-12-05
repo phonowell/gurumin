@@ -169,7 +169,8 @@ app.fn.open = (source, target, option) ->
     return app.fn.openInside source, target, option
 
   plugin = window.SafariViewController
-  if !plugin then return
+  if !plugin
+    return app.fn.openInside source, target, option
 
   plugin.isAvailable (available) ->
 
