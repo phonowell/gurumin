@@ -136,7 +136,11 @@ do ->
 
     # init
     if !arg
-      if fn.handle then throw new Error 'cannot init twice'
+    
+      if fn.handle
+        $.i '$.require() overloaded'
+        return fn.handle
+
       return fn.handle = new Require()
 
     type = $.type arg
