@@ -1,6 +1,6 @@
 # prepare
 
-for kye in 'anitama cordova plugins'.split ' '
+for key in 'cordova plugins'.split ' '
   window[key] or= {}
 for key in 'check fn keyboard share'.split ' '
   app[key] or= {}

@@ -9,7 +9,7 @@
   opacity 0
 
   &:after
-    content attr(title)
+    content '向下滑动'
     display block
     size 100%
     color #fff
@@ -24,16 +24,29 @@
     left auto
     right 48px
 
+    &:after
+      content '向左滑动'
+
   &.direction-right
     top 144px
     left 48px
     right auto
 
+    &:after
+      content '向右滑动'
+
   &.direction-up
     top auto
     bottom 48px
 
+    &:after
+      content '向上滑动'
+
   &.status-active
+
+    &:after
+      content attr(title)
+
     div
       background-color $color-main
 
