@@ -20,6 +20,7 @@ for key in 'check fn keyboard share'.split ' '
   app.fn.hideSplash()
   app.fn.open(source, [target], [option])
   app.fn.openInside(source, [target], [option])
+  app.fn.pageTransit(method, [option])
   app.fn.refreshGallery(source)
   app.fn.remind(data)
   app.fn.setOrientation(option)
@@ -31,7 +32,6 @@ for key in 'check fn keyboard share'.split ' '
   app.check.push()
   app.keyboard.hide()
   app.keyboard.show()
-  app.pageTransit(method, option)
   app.share.submit(type, data)
   app.stat(category, key, arg)
   app.user.login(type, [callback])
@@ -196,6 +196,23 @@ app.fn.openInside = (url, target = '_blank', option = {}) ->
 
   plugin.open url, target, option
 
+app.fn.pageTransit = (method, option) ->
+
+  plugin = window.plugins.nativepagetransitions
+  if !plugin then return
+
+  if !method
+    plugin.executePendingTransition()
+    return
+
+  option = _.merge
+    androiddelay: -1
+    iosdelay: -1
+  , option or {}
+
+  plugin.cancelPendingTransition()
+  plugin[method] option
+
 app.fn.refreshGallery = (source) ->
   if app.os != 'android' then return
   if !source?.length then return
@@ -240,7 +257,7 @@ app.check.connection = ->
     if !plugin then return 'none'
     plugin.type
 
-app.check.push = ->
+app.check.push = (callback) ->
 
   plugin = anitama.push
   if !plugin then return
@@ -249,7 +266,7 @@ app.check.push = ->
     return plugin.disablePush()
 
   plugin.enablePush()
-  plugin.checkIntent null, (data) -> app.fn.receive data
+  plugin.checkIntent null, (data) -> callback? data
 
 app.stat = (category, key, arg) ->
   plugin = anitama.stat
@@ -352,20 +369,3 @@ app.keyboard.hide = ->
   plugin = cordova.plugins.Keyboard
   if !plugin then return
   plugin.close()
-
-app.pageTransit = (method, option) ->
-
-  plugin = window.plugins.nativepagetransitions
-  if !plugin then return
-
-  if !method
-    plugin.executePendingTransition()
-    return
-
-  option = _.merge
-    androiddelay: -1
-    iosdelay: -1
-  , option or {}
-
-  plugin.cancelPendingTransition()
-  plugin[method] option

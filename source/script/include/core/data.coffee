@@ -12,18 +12,11 @@ class window.Data
 
   ###
 
-    error(code)
     get(key)
     observe(arg)
     set(arg)
 
   ###
-
-  error: (arg) ->
-    throw new Error switch arg
-      when 'type' then 'invalid arguments type'
-      when 'length' then 'invalid arguments length'
-      else "unknown error arg <#{arg}>"
 
   get: (key) ->
     if !key? then return @
@@ -34,7 +27,7 @@ class window.Data
     [key, getter, setter] = switch arg.length
       when 2 then [arg[0], null, arg[1]]
       when 3 then arg
-      else @error 'length'
+      else throw new Error 'invalid argument length'
 
     Object.defineProperty @, key,
       enumerable: true
@@ -58,6 +51,6 @@ class window.Data
       when 2 # key, value
         [key, value] = arg
         @[key] = value
-      else @error 'length'
+      else throw new Error 'invalid argument length'
 
     @

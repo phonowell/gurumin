@@ -1,8 +1,7 @@
 # require
 
 $$ = require 'fire-keeper'
-{$, _, Promise} = $$.library
-co = Promise.coroutine
+{$, _} = $$.library
 
 # function
 
@@ -16,7 +15,7 @@ exclude = $$.fn.excludeInclude
 
 ###
 
-$$.task 'lint', co ->
+$$.task 'lint', ->
 
   yield $$.task('kokoro')()
 
