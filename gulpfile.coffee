@@ -11,17 +11,17 @@ exclude = $$.fn.excludeInclude
 
 ###
 
-  lint()
+lint()
 
 ###
 
 $$.task 'lint', ->
 
-  yield $$.task('kokoro')()
+  await $$.task('kokoro')()
 
-  yield $$.lint './source/**/*.styl'
+  await $$.lint './source/**/*.styl'
 
-  yield $$.lint [
+  await $$.lint [
     './gulpfile.coffee'
     './source/**/*.coffee'
   ]

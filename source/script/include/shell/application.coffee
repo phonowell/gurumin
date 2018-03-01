@@ -15,7 +15,6 @@ for key in 'check fn keyboard share'.split ' '
   app.fn.download(src, name)
   app.fn.enablePermission(name)
   app.fn.exit()
-  app.fn.feedback()
   app.fn.fullScreen(option)
   app.fn.hideSplash()
   app.fn.open(source, [target], [option])
@@ -146,11 +145,6 @@ app.fn.exit = ->
   plugin = navigator.app
   if !plugin then return
   plugin.exitApp()
-
-app.fn.feedback = ->
-  plugin = anitama.feedback
-  if !plugin then return
-  plugin.openFeedback()
 
 app.fn.fullScreen = (option) ->
   plugin = window.StatusBar

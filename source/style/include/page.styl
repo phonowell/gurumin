@@ -11,6 +11,12 @@
 
   .theme-night &
     background-color #666
+    > .content
+      background-color #555
+
+  .status-shadowed &
+    > .content
+      overflow-y hidden
 
   > .content
     width 100%
@@ -21,6 +27,4 @@
     -webkit-overflow-scrolling touch
     background-color #fafafa
     margin 0 auto
-
-    .theme-night &
-      background-color #555
+    position relative
