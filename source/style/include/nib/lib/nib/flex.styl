@@ -27,7 +27,6 @@ display(type, args...)
  * Plus a translation to the old syntax, if possible.
  */
 
-
 //
 // 5. Ordering and Orientation
 //    - http://www.w3.org/TR/css3-flexbox/#ordering-and-orientation
@@ -77,7 +76,6 @@ flex-flow()
   if flex in flex-version
     vendor('flex-flow', arguments, only: webkit ms official)
 
-
 order()
   // obsolete
   if box in flex-version
@@ -87,7 +85,6 @@ order()
   if flex in flex-version
     vendor('flex-order', arguments, only: ms)
     vendor('order', arguments, only: webkit official)
-
 
 //
 // 7. Flexibility
@@ -135,7 +132,6 @@ flex(growth)
   // new
   if flex in flex-version
     vendor('flex', arguments, only: webkit ms official)
-
 
 // converts the justification alignment
 -convert-justify(align)
