@@ -7,17 +7,6 @@
       width 144px
       background-size cover
 
-  .theme-night &
-    background-color #666
-
-    .date
-      border-color #555
-      color #999
-      background-color #555
-
-    .item
-      border-color #555
-
   .date
     display block
     color #999
@@ -47,16 +36,6 @@
       border-bottom 1px solid #eee
       margin-top 12px
       clear both
-
-    .theme-night &
-      &:after
-        border-color #555
-
-      &:visited
-        h1
-          color #ddd
-        h2
-          color #ccc
 
       h1
         color #fff
@@ -107,21 +86,6 @@
     white-space pre-wrap
 
 .list-block
-
-  .theme-night &
-    .block
-      background-color #666
-      color #ccc
-
-    .item
-      border-color #555
-      color #ddd
-
-      &:last-of-type
-        border-color @border-color
-
-    .r
-      color #999
 
   .block
     background-color #fff
@@ -189,18 +153,7 @@
     color #ddd
 
 .list-card
-  .theme-night &
-    .item
-      background-color #666
-      &:visited
-        h1
-          color #ddd
-        .subtitle
-          color #ccc
-    h1
-      color #fff
-    .subtitle
-      color #eee
+  
   .item
     display block
     margin 16px
@@ -322,23 +275,7 @@
     display block
     clear both
 
-  .theme-night &
-    color #ccc
-    &:before
-      background-color $color-night
-      background-image linear-gradient(30deg, $color-night, $color-night - 50%)
-
 .list-tag
-
-  .theme-night &
-    .item
-      color #ccc
-      background-color #555
-      border-color #444
-
-      &:active
-        color #eee
-        background-color #5c5c5c
 
   .item
     display inline-block
@@ -362,49 +299,6 @@
       margin-right 0.5em
 
 .list-comment
-
-  .theme-night &
-    $color = #666
-    .item-comment
-      border-color #555
-      color #ccc
-
-    .quoted
-      background-color #555
-      border-color #444
-      .quoted
-        border-top 1px solid #555
-        &:first-of-type
-          border-top 1px solid #444
-
-    .author
-      background-color $color - 10%
-
-    .divider-comment
-      background-color $color - 10%
-
-    .unfold
-      background-color $color + 10%
-      border-color $color - 10%
-
-    .tool
-      span
-        color #bbb
-        &:active
-          color #ddd
-
-    .avatar
-      border-color #666
-
-    .content-comment
-      color #ccc
-      a
-        color #fff
-
-    .alert
-      background-color #444
-      border-color #333
-      color #999
 
   > .alert
     margin 16px 24px !important

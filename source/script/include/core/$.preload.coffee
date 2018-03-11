@@ -18,25 +18,26 @@ $.preload = (arg...) ->
     return def.promise()
 
   # loader
-
   $loader = $ '<img>'
   $loader
   .on 'error', -> check()
-  .on 'load', -> check()
+  .on 'load', -> check $loader.attr 'src'
 
   # function
 
-  check = ->
+  check = (src) ->
+
     if !list.length
       $loader.remove()
+      def.notify src
       def.resolve()
       callback?()
       return
 
+    def.notify src
     next()
 
   do next = -> $loader.attr 'src', list.shift()
 
-  # return deferred
-
+  # return
   def.promise()
