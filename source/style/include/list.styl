@@ -39,12 +39,14 @@
 
       h1
         color #fff
+
       h2
         color #eee
 
     &:visited
       h1
         color #999
+
       h2
         color #ccc
 
@@ -53,6 +55,7 @@
 
     &.img-hidden
       pointer-events none
+
       .a
         background-image none !important
 
@@ -86,7 +89,6 @@
     white-space pre-wrap
 
 .list-block
-
   .block
     background-color #fff
     margin-bottom 24px
@@ -153,7 +155,6 @@
     color #ddd
 
 .list-card
-  
   .item
     display block
     margin 16px
@@ -165,6 +166,7 @@
     &:visited
       h1
         color #999
+
       .subtitle
         color #ccc
 
@@ -182,6 +184,7 @@
 
     &.img-hidden
       pointer-events none
+
       .a
         background-image none !important
 
@@ -190,6 +193,7 @@
     background center center no-repeat
     background-size cover !important
     position relative
+
     &:before
       content ''
       display block
@@ -198,6 +202,7 @@
   .b
     display block
     padding 8px 0
+
     &:after
       content ''
       display block
@@ -276,7 +281,6 @@
     clear both
 
 .list-tag
-
   .item
     display inline-block
     box-sizing border-box
@@ -299,7 +303,6 @@
       margin-right 0.5em
 
 .list-comment
-
   > .alert
     margin 16px 24px !important
 
@@ -328,17 +331,22 @@
     border 1px solid #ddd
     background-color #ffe
     padding-top 0
+
     .quoted
       border-top 1px solid #ffe
+
       &:first-of-type
         border-top 1px solid #ddd
+
     .author
       background none
       height 16px
       line-height @height
+
     .content-comment
       margin 6px 4px 0
       padding 0 0 2px
+
     .alert
       margin 4px 2px
 
@@ -377,6 +385,7 @@
     margin 0 0 2px
     padding 0 0 0 8px
     font-size 12px
+
     .name
       margin 0 0.2em
 
@@ -384,6 +393,7 @@
     margin-left 0.5em
     display inline-block
     position relative
+
     span
       display inline-block
       margin 0 0.25em 0 0
@@ -391,8 +401,10 @@
       font-size 12px
       color #789
       cursor pointer
+
       &:active
         color #c33
+
   .content-comment:hover~.author .tool, .author:hover .tool
     display inline-block
 
@@ -418,10 +430,12 @@
     padding 8px
     white-space pre-wrap
     word-wrap break-word
+
     .name
       color #369
       font-size 14px
       line-height normal
+
     .btn
       border-radius 2px
       color #333
@@ -431,6 +445,7 @@
       margin 0 4px
       min-width 32px
       width auto
+
     a
       color #369
 
@@ -462,7 +477,7 @@
       padding 0
 
     .tool
-      display none!important
+      display none !important
 
   .emotion
     $size = 80px

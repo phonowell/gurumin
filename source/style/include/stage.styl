@@ -14,24 +14,31 @@
     $p = arguments[0]
     $a = arguments[1]
     $b = arguments[2]
+
     &.{$p + '-' + $a}
       .only-{$a}
         display block
+
       .not-{$a}
         display none
-    if $b
+
+    if ($b)
       &.{$p + '-' + $b}
         .only-{$b}
           display block
+
         .not-{$b}
           display none
+
       .only-{$a}, .only-{$b}
         display none
+
       .not-{$a}, .not-{$b}
         display auto
     else
       .only-{$a}
         display none
+
       .not-{$a}
         display auto
 
@@ -45,7 +52,6 @@
   status('mode', 'debug')
 
 // class
-
 .hidden
   display none !important
   pointer-events none !important
@@ -80,9 +86,11 @@
   0%
     opacity 1
     transform scale(1) translateX(0)
+
   33.33%, 66.67%
     opacity 1
     transform scale(0.9) translateX(0)
+
   100%
     opacity 0
     transform scale(0.9) translateX(-32px)
@@ -91,6 +99,7 @@
   0%
     opacity 0.15
     transform scale3d(0.75, 0.75, 1)
+
   100%
     opacity 0
     transform scale3d(1, 1, 1)

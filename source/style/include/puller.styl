@@ -3,7 +3,7 @@
   position absolute
   top 48px
   left 50%
-  margin-left -@width * 0.5
+  margin-left - @width * 0.5
   pointer-events none
   z-index 1
   opacity 0
@@ -43,7 +43,6 @@
       content '向上滑动'
 
   &.status-active
-
     &:after
       content attr(title)
 
@@ -59,4 +58,4 @@
     transition background-color 250ms $ease
 
     .os-ios &
-      transition null
+      transition none

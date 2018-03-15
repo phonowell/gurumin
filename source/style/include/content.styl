@@ -40,7 +40,7 @@
 
     &:active
       .icon-play-circle-outline:after, .hint-img
-          background-color rgba(#000, 0.6)
+        background-color rgba(#000, 0.6)
 
     img
       margin 0 auto
@@ -57,13 +57,14 @@
       left 50%
       top 50%
       margin 0
-      margin-top -@width * 0.5
-      margin-left -@width * 0.5
+      margin-top - @width * 0.5
+      margin-left - @width * 0.5
       color #fff
 
       &:before
         z-index 1
         position relative
+
       &:after
         content ''
         display block
@@ -74,7 +75,7 @@
         left 0
         top 0
         border-radius 50%
-  
+
   .hint-img
     pointer-events none
     display inline-block
@@ -163,14 +164,19 @@
 
   h1
     font-size 2em
+
   h2
     font-size 1.75em
+
   h3
     font-size 1.5em
+
   h4
     font-size 1.25em
+
   h5
     font-size 1em
+
   h6
     font-size 1em
     color #777

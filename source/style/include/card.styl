@@ -21,6 +21,7 @@
 
   &.animate-in
     animation animate-in-card-top 250ms ease
+
   &.animate-out
     animation animate-out-card-top 350ms ease
 
@@ -35,6 +36,7 @@
 
   &.animate-in
     animation animate-in-card-center 250ms $ease-in-out-back
+
   &.animate-out
     animation animate-out-card-center 350ms $ease-in-out-back
 
@@ -70,6 +72,7 @@
 
   &.animate-in
     animation animate-in-card-bottom 250ms ease
+
   &.animate-out
     animation animate-out-card-bottom 350ms ease
 
@@ -78,6 +81,7 @@
   0%
     opacity 0
     transform translate3d(-50%, -50%, 0) scale(0.95)
+
   80%, 100%
     opacity 1
     transform translate3d(-50%, -50%, 0) scale(1)
@@ -86,6 +90,7 @@
   0%
     opacity 1
     transform translate3d(-50%, -50%, 0) scale(1)
+
   80%, 100%
     opacity 0
     transform translate3d(-50%, -50%, 0) scale(0.95)
@@ -93,23 +98,27 @@
 @keyframes animate-in-card-top
   0%
     transform translate3d(0, -640px, 0)
+
   100%
     transform translate3d(0, 0, 0)
 
 @keyframes animate-out-card-top
   0%
     transform translate3d(0, 0, 0)
+
   100%
     transform translate3d(0, -640px, 0)
 
 @keyframes animate-in-card-bottom
   0%
     transform translate3d(0, 640px, 0)
+
   100%
     transform translate3d(0, 0, 0)
 
 @keyframes animate-out-card-bottom
   0%
     transform translate3d(0, 0, 0)
+
   100%
     transform translate3d(0, 640px, 0)
