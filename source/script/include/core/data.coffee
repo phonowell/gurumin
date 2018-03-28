@@ -5,6 +5,8 @@ class window.Data
 
   # constructor
   constructor: (value) ->
+
+    @[DATA] = {}
     
     type = $.type value
 
@@ -17,19 +19,13 @@ class window.Data
     throw new Error "invalid type <#{type}>"
 
   ###
-  __data__
-  ###
-
-  "#{DATA}": {}
-
-  ###
   get([key])
   observe(key, [getter], setter)
   set([key], value)
   ###
 
   get: (key) ->
-    if !key then return @
+    if !key? then return @
     @[key]
 
   observe: (arg...) ->
