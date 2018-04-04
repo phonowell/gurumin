@@ -23,7 +23,6 @@ for key in 'check fn keyboard share'.split ' '
   app.fn.refreshGallery(source)
   app.fn.remind(data)
   app.fn.setOrientation(option)
-  app.fn.setStatusbarColor(color)
   app.fn.shareEx(option)
 
   app.check.connection()
@@ -223,11 +222,6 @@ app.fn.setOrientation = (option) ->
   plugin = window.screen
   if !plugin then return
   plugin.orientation.lock option
-
-app.fn.setStatusbarColor = (color) ->
-  plugin = window.StatusBar
-  if !plugin then return
-  plugin.backgroundColorByHexString color
 
 app.fn.shareEx = (option) ->
 
