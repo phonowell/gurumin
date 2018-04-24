@@ -2,7 +2,7 @@
 
 for key in 'anitama cordova plugins'.split ' '
   window[key] or= {}
-for key in 'check fn keyboard share'.split ' '
+for key in 'check fn keyboard share status'.split ' '
   app[key] or= {}
 
 # function
@@ -32,7 +32,7 @@ for key in 'check fn keyboard share'.split ' '
   app.keyboard.show()
   app.share.submit(type, data)
   app.stat(category, key, arg)
-  app.user.login(type, [callback])
+  app.user.login([option])
 
 ###
 
@@ -304,19 +304,21 @@ app.share.submit = (type, data) ->
 
   def.promise()
 
-app.user.login = (type, callback) ->
+app.user.login = (option) ->
+
+  def = $.Deferred()
+
   plugin = anitama.share
+  if !plugin
+    return def.reject '相关插件暂不可用'
 
-  if !plugin then return
+  {type} = option
+  name = "login#{_.capitalize type}"
 
-  name = 'login' + switch type
-    when 'weibo' then 'Weibo'
-    when 'wechat' then 'Wechat'
+  fnDone = (res) ->
 
-  plugin[name] null
-  , (res) ->
     app.post "/auth/#{type}", res
-    .fail (msg) -> $.info msg
+    .fail (msg) -> def.reject msg
     .done (data) ->
 
       if !data.success
@@ -336,16 +338,19 @@ app.user.login = (type, callback) ->
       app.check 'login'
       $.info '登录成功'
 
-      callback?()
-  , (msg) -> $.info msg
+      def.resolve()
+
+  fnFail = (msg) -> def.reject msg
+
+  plugin[name] null, fnDone, fnFail
+
+  def.promise()
 
 app.check.isWechatInstalled = ->
   plugin = anitama.share
-
   if !plugin then return
-
   plugin.isWXAppInstalled null, (res) ->
-    app.isWechatInstalled = res
+    app.status.isWechatInstalled = res
   , $.noop
 
 app.keyboard.show = ->
