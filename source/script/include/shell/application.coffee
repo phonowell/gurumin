@@ -21,7 +21,6 @@ for key in 'check fn keyboard share status'.split ' '
   app.fn.openInside(source, [target], [option])
   app.fn.pageTransit(method, [option])
   app.fn.refreshGallery(source)
-  app.fn.remind(data)
   app.fn.setOrientation(option)
   app.fn.shareEx(option)
 
@@ -48,7 +47,7 @@ app.fn.clearCache = ->
 
   plugin = window.cache
   if !plugin
-    return def.reject '该功能尚未就绪'
+    return def.reject '相关插件暂不可用'
 
   fnDone = (status) -> def.resolve status
   fnFail = (status) -> def.reject status
@@ -212,11 +211,6 @@ app.fn.refreshGallery = (source) ->
   plugin = window.refreshMedia
   if !plugin then return
   plugin.refresh source
-
-app.fn.remind = (data) ->
-  plugin = anitama.toolkit
-  if !plugin then return
-  plugin.remind data
 
 app.fn.setOrientation = (option) ->
   plugin = window.screen
