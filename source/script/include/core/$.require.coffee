@@ -25,13 +25,11 @@ do ->
           suffix: ".css?salt=#{app.salt}"
 
     ###
-
-      get(map, callback)
-      getHtml(path)
-      getScript(path)
-      getStyle(path)
-      set(data)
-
+    get(map, callback)
+    getHtml(path)
+    getScript(path)
+    getStyle(path)
+    set(data)
     ###
 
     get: (map, callback) ->

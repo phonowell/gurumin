@@ -19,7 +19,6 @@ for key in 'check fn keyboard share status'.split ' '
   app.fn.hideSplash()
   app.fn.open(source, [target], [option])
   app.fn.openInside(source, [target], [option])
-  app.fn.pageTransit(method, [option])
   app.fn.refreshGallery(source)
   app.fn.setOrientation(option)
   app.fn.shareEx(option)
@@ -188,23 +187,6 @@ app.fn.openInside = (url, target = '_blank', option = {}) ->
 
   plugin.open url, target, option
 
-app.fn.pageTransit = (method, option) ->
-
-  plugin = window.plugins.nativepagetransitions
-  if !plugin then return
-
-  if !method
-    plugin.executePendingTransition()
-    return
-
-  option = _.merge
-    androiddelay: -1
-    iosdelay: -1
-  , option or {}
-
-  plugin.cancelPendingTransition()
-  plugin[method] option
-
 app.fn.refreshGallery = (source) ->
   if app.os != 'android' then return
   if !source?.length then return
@@ -244,10 +226,10 @@ app.check.push = (callback) ->
   plugin = anitama.push
   if !plugin then return
 
-  if !app.config 'push'
-    return plugin.disablePush()
+  unless app.config 'push'
+    return plugin.disablePush?()
 
-  plugin.enablePush()
+  plugin.enablePush?()
   plugin.checkIntent null, (data) -> callback? data
 
 app.stat = (category, key, arg) ->
