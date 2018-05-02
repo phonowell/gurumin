@@ -222,13 +222,8 @@ app.check.connection = ->
     plugin.type
 
 app.check.push = (callback) ->
-
   plugin = anitama.push
   if !plugin then return
-
-  unless app.config 'push'
-    return plugin.disablePush?()
-
   plugin.enablePush?()
   plugin.checkIntent null, (data) -> callback? data
 
@@ -263,11 +258,11 @@ app.share.submit = (type, data) ->
   # map
   map =
     moments: 'WechatTimeline'
-    weibo: 'Weibo'
-    wechat: 'Wechat'
     qq: 'QQ'
     qqzone: 'QQZone'
     tieba: 'Tieba'
+    wechat: 'Wechat'
+    weibo: 'Weibo'
 
   fnShare = plugin["share#{map[type]}"]
   if !fnShare
@@ -305,11 +300,12 @@ app.user.login = (option) ->
       a = data.data
 
       app.user
-        uid: a.uid
-        name: a.nickname
         avatar: a.avatarUrl
-        token: a.accessToken
         expire: a.expireAt
+        name: a.nickname
+        platform: type
+        token: a.accessToken
+        uid: a.uid
 
       app.check 'login'
       $.info '登录成功'
