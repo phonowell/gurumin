@@ -8,30 +8,27 @@ for key in 'check fn keyboard share status'.split ' '
 # function
 
 ###
+app.fn.addSearchData(data)
+app.fn.clearCache()
+app.fn.clip(string)
+app.fn.download(src, name)
+app.fn.enablePermission(name)
+app.fn.exit()
+app.fn.hideSplash()
+app.fn.loginViaSDK(type)
+app.fn.open(source, [target], [option])
+app.fn.openInside(source, [target], [option])
+app.fn.refreshGallery(source)
+app.fn.setOrientation(option)
+app.fn.shareEx(option)
 
-  app.fn.addSearchData(data)
-  app.fn.clearCache()
-  app.fn.clip(string)
-  app.fn.download(src, name)
-  app.fn.enablePermission(name)
-  app.fn.exit()
-  app.fn.fullScreen(option)
-  app.fn.hideSplash()
-  app.fn.open(source, [target], [option])
-  app.fn.openInside(source, [target], [option])
-  app.fn.refreshGallery(source)
-  app.fn.setOrientation(option)
-  app.fn.shareEx(option)
-
-  app.check.connection()
-  app.check.isWechatInstalled()
-  app.check.push()
-  app.keyboard.hide()
-  app.keyboard.show()
-  app.share.submit(type, data)
-  app.stat(category, key, arg)
-  app.user.login([option])
-
+app.check.connection()
+app.check.isWechatInstalled()
+app.check.push()
+app.keyboard.hide()
+app.keyboard.show()
+app.share.submit(type, data)
+app.stat(category, key, arg)
 ###
 
 app.fn.addSearchData = (data) ->
@@ -65,10 +62,8 @@ app.fn.download = (source, filename) ->
   # function
 
   ###
-
-    onError()
-    onSuccess(entry)
-
+  onError()
+  onSuccess(entry)
   ###
 
   onError = -> def.reject '下载文件失败'
@@ -143,16 +138,44 @@ app.fn.exit = ->
   if !plugin then return
   plugin.exitApp()
 
-app.fn.fullScreen = (option) ->
-  plugin = window.StatusBar
-  if !plugin then return
-  method = if option then 'hide' else 'show'
-  plugin[method]()
-
 app.fn.hideSplash = ->
   plugin = navigator.splashscreen
   if !plugin then return
   plugin.hide()
+
+app.fn.loginViaSDK = (type) ->
+
+  def = $.Deferred()
+
+  plugin = anitama.share
+  if !plugin
+    return def.reject '相关插件暂不可用'
+
+  method = switch type
+    when 'wechat' then 'loginWechat'
+    when 'weibo' then 'loginWeibo'
+
+  fnDone = (data) ->
+
+    app.post "/auth/#{type}", data
+    .fail (msg) -> def.reject msg
+    .done (res) ->
+
+      if !res.success
+        return def.reject res.info
+
+      app.user.record res.data
+
+      app.user.check()
+      def.resolve()
+  
+  fnError = (msg) ->
+    app.user.logout()
+    def.reject msg
+
+  plugin[method] null, fnDone, fnError
+
+  def.promise()
 
 app.fn.open = (source, target, option) ->
 
@@ -206,9 +229,9 @@ app.fn.shareEx = (option) ->
 
   plugin.shareWithOptions
     chooserTitle: '分享'
-    files: [option.src]
-    message: option.message
-    subject: option.subject or '来自Anitama的分享'
+    files: [option.thumb]
+    message: option.desc or ''
+    subject: option.title or ''
     url: option.url
 
 #
@@ -272,49 +295,6 @@ app.share.submit = (type, data) ->
   fnFail = (msg) -> def.reject msg
 
   fnShare data, fnDone, fnFail
-
-  def.promise()
-
-app.user.login = (option) ->
-
-  def = $.Deferred()
-
-  plugin = anitama.share
-  if !plugin
-    return def.reject '相关插件暂不可用'
-
-  {type} = option
-  name = "login#{_.capitalize type}"
-
-  fnDone = (res) ->
-
-    app.post "/auth/#{type}", res
-    .fail (msg) -> def.reject msg
-    .done (data) ->
-
-      if !data.success
-        $.info data.info
-        app.user.logout()
-        return
-
-      a = data.data
-
-      app.user
-        avatar: a.avatarUrl
-        expire: a.expireAt
-        name: a.nickname
-        platform: type
-        token: a.accessToken
-        uid: a.uid
-
-      app.check 'login'
-      $.info '登录成功'
-
-      def.resolve()
-
-  fnFail = (msg) -> def.reject msg
-
-  plugin[name] null, fnDone, fnFail
 
   def.promise()
 
