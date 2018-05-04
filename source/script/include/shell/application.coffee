@@ -238,7 +238,7 @@ app.fn.shareEx = (option) ->
 
 app.check.connection = ->
   app.connection = do ->
-    status = app.debug 'connection'
+    status = app.debug.get 'connection'
     if status then return status
     plugin = navigator.connection
     if !plugin then return 'none'
