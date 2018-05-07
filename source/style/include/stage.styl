@@ -34,22 +34,22 @@
         display none
 
       .not-{$a}, .not-{$b}
-        display auto
+        display unset
     else
       .only-{$a}
         display none
 
       .not-{$a}
-        display auto
+        display unset
 
-  status('os', 'android', 'ios')
-  status('shell', 'browser')
-  status('shell', 'application')
-  status('shell', 'wechat')
-  status('shell', 'electron')
-  status('user', 'login')
   status('device', 'desktop')
   status('mode', 'debug')
+  status('os', 'android', 'ios')
+  status('shell', 'application')
+  status('shell', 'browser')
+  status('shell', 'electron')
+  status('shell', 'wechat')
+  status('user', 'login')
 
 // class
 .hidden
@@ -66,6 +66,7 @@
 
 .clear
   &:after
+    pointer-events none
     content ''
     display block
     clear both
