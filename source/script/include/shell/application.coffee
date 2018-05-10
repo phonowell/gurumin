@@ -21,13 +21,13 @@ app.fn.openInside(source, [target], [option])
 app.fn.refreshGallery(source)
 app.fn.setOrientation(option)
 app.fn.shareEx(option)
+app.fn.shareViaSDK(type, data)
 
 app.check.connection()
 app.check.isWechatInstalled()
 app.check.push()
 app.keyboard.hide()
 app.keyboard.show()
-app.share.submit(type, data)
 app.stat(category, key, arg)
 ###
 
@@ -147,13 +147,13 @@ app.fn.loginViaSDK = (type) ->
 
   def = $.Deferred()
 
-  plugin = anitama.share
-  if !plugin
-    return def.reject '相关插件暂不可用'
-
   method = switch type
     when 'wechat' then 'loginWechat'
     when 'weibo' then 'loginWeibo'
+  if !method then return def.reject "非法类型#{type}"
+
+  plugin = anitama.share
+  if !plugin then return def.reject '相关插件暂不可用'
 
   fnDone = (data) ->
 
@@ -169,11 +169,11 @@ app.fn.loginViaSDK = (type) ->
       app.user.check()
       def.resolve()
   
-  fnError = (msg) ->
+  fnFail = (msg) ->
     app.user.logout()
     def.reject msg
 
-  plugin[method] null, fnDone, fnError
+  plugin[method] null, fnDone, fnFail
 
   def.promise()
 
@@ -234,6 +234,35 @@ app.fn.shareEx = (option) ->
     subject: option.title or ''
     url: option.url
 
+app.fn.shareViaSDK = (type, data) ->
+
+  def = $.Deferred()
+
+  for key in ['content', 'image', 'title', 'url']
+    if !data[key] then return def.reject "#{key}字段不能为空"
+
+  plugin = anitama.share
+  if !plugin then return def.reject '相关插件暂不可用'
+
+  # map
+  map =
+    moments: 'WechatTimeline'
+    qq: 'QQ'
+    qqzone: 'QQZone'
+    tieba: 'Tieba'
+    wechat: 'Wechat'
+    weibo: 'Weibo'
+
+  unless fnShare = plugin["share#{map[type]}"]
+    return def.reject '相关方法暂不可用'
+
+  fnDone = (msg) -> def.resolve msg
+  fnFail = (msg) -> def.reject msg
+
+  fnShare data, fnDone, fnFail
+
+  def.promise()
+
 #
 
 app.check.connection = ->
@@ -251,59 +280,26 @@ app.check.push = (callback) ->
   plugin.checkIntent null, (data) -> callback? data
 
 app.stat = (category, key, arg) ->
+  
   plugin = anitama.stat
-
   if !plugin then return
 
-  # check param
-  if !category
-    plugin.start()
-    return
+  if !category then return plugin.start()
 
   $.i 'stat', "#{category} / #{key} / #{arg}"
 
-  # plugin
   plugin.event
     category: category
     key: key
     args: arg
-  , $.noop, $.noop
-
-app.share.submit = (type, data) ->
-
-  def = $.Deferred()
-
-  plugin = anitama.share
-
-  if !plugin
-    return def.reject '相关插件暂不可用'
-
-  # map
-  map =
-    moments: 'WechatTimeline'
-    qq: 'QQ'
-    qqzone: 'QQZone'
-    tieba: 'Tieba'
-    wechat: 'Wechat'
-    weibo: 'Weibo'
-
-  fnShare = plugin["share#{map[type]}"]
-  if !fnShare
-    return def.reject '相关方法暂不可用'
-
-  fnDone = (msg) -> def.resolve msg
-  fnFail = (msg) -> def.reject msg
-
-  fnShare data, fnDone, fnFail
-
-  def.promise()
+  , null, null
 
 app.check.isWechatInstalled = ->
   plugin = anitama.share
-  if !plugin then return
+  if !plugin then return false
   plugin.isWXAppInstalled null, (res) ->
     app.status.isWechatInstalled = res
-  , $.noop
+  , null
 
 app.keyboard.show = ->
   plugin = cordova.plugins.Keyboard
