@@ -1,15 +1,13 @@
 #puller
-  size 64px
+  width 64px
+  height @width
   position absolute
-  top 48px
-  left 50%
-  margin-left - @width * 0.5
   pointer-events none
   z-index 12
   opacity 0
 
   &:after
-    content '向下滑动'
+    content ''
     display block
     size 100%
     color #fff
@@ -38,9 +36,20 @@
   &.direction-up
     top auto
     bottom 48px
+    left 50%
+    margin-left - @width * 0.5
 
     &:after
       content '向上滑动'
+
+  &.direction-down
+    top 48px
+    bottom auto
+    left 50%
+    margin-left - @width * 0.5
+
+    &:after
+      content '向下滑动'
 
   &.status-active
     &:after
