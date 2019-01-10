@@ -1,27 +1,16 @@
-# require
-
-$$ = require 'fire-keeper'
-{$, _} = $$.library
-
-# function
-
-exclude = $$.fn.excludeInclude
+$ = require 'fire-keeper'
+fs = require 'fs'
+path = require 'path'
 
 # task
+listFilename = fs.readdirSync './task'
+for filename in listFilename
 
-###
+  unless ~filename.search /\.coffee/
+    continue
 
-lint()
+  name = filename.replace /\.coffee/, ''
 
-###
-
-$$.task 'lint', ->
-
-  await $$.task('kokoro')()
-
-  await $$.lint './source/**/*.styl'
-
-  await $$.lint [
-    './gulpfile.coffee'
-    './source/**/*.coffee'
-  ]
+  do (name) -> $.task name, ->
+    fn = require "./task/#{name}.coffee"
+    fn()
